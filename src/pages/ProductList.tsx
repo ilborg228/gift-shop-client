@@ -1,24 +1,23 @@
-import Product from "./Product";
+import ProductCard from "../components/ProductCard";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {host} from "../index";
 import {IProduct} from "../types/types";
-import Pagination from "./Pagination";
+import Pagination from "../components/Pagination";
+import {host} from "../constants/constants";
 
 interface ProductListProps{
-
+    categoryId: number
 }
 
-const ProductList: React.FC<ProductListProps> = () => {
+const ProductList: React.FC<ProductListProps> = ({categoryId}) => {
 
-    let page: number = 0
-
+    const [page, setPage] = useState<number>(0)
     const [products, setProducts] = useState<IProduct[]>([])
 
     async function fetchProducts() {
         try {
             const response = await axios
-                .get<IProduct[]>(host + "/categories/1/products", {
+                .get<IProduct[]>(host + "/categories/"+categoryId+"/products", {
                     params:{
                         "order_by":"ID",
                         "page": page
@@ -31,7 +30,7 @@ const ProductList: React.FC<ProductListProps> = () => {
 
     useEffect(()=> {
         fetchProducts()
-    },[])
+    },[page])
 
     return (
         <div className="bg-white">
@@ -40,11 +39,11 @@ const ProductList: React.FC<ProductListProps> = () => {
 
                 <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
                     {products.map((product) => (
-                        <Product product={product}/>
+                        <ProductCard product={product}/>
                     ))}
                 </div>
             </div>
-            <Pagination/>
+            <Pagination  page={page} setPage={setPage}/>
         </div>
     )
 }

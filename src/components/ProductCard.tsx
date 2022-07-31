@@ -1,11 +1,11 @@
 import React from 'react';
 import {IProduct} from "../types/types";
 
-interface ProductProps{
+interface ProductCardProps{
     product:IProduct
 }
 
-const Product: React.FC<ProductProps> = ({product}) => {
+const ProductCard: React.FC<ProductCardProps> = ({product}) => {
     return (
         <div>
             <a key={product.id} href={'/products/'+product.id} className="group">
@@ -23,4 +23,4 @@ const Product: React.FC<ProductProps> = ({product}) => {
     );
 };
 
-export default Product;
+export default ProductCard;
