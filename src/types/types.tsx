@@ -1,7 +1,6 @@
 export interface IPath {
     name: string,
     href: string,
-    current: boolean
 }
 
 export interface IProduct {
