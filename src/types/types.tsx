@@ -5,7 +5,6 @@ export interface IPath {
 
 export interface IProduct {
     id: number,
-    imgSource: string,
     name: string,
     price: number,
     categoryId: number
@@ -13,13 +12,15 @@ export interface IProduct {
 
 export interface IProductDetails extends IProduct{
     height: number,
-    description: string
+    description: string,
+    images: IImage[]
 }
 
 export interface ICategory {
     categoryName: string,
     imgSource: string,
-    id: number
+    id: number,
+    child: ICategory
 }
 
 export interface IComment {
@@ -28,4 +29,9 @@ export interface IComment {
     productId: number
     creation: Date,
     scoreValue: string
+}
+
+export interface IImage {
+    imgSource: string,
+    primaryImage: boolean
 }

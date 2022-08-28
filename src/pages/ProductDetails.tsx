@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {IProduct, IProductDetails} from "../types/types";
+import {IImage, IProductDetails} from "../types/types";
 import axios from "axios";
 import {host} from "../constants/constants";
 import {useParams} from "react-router-dom";
@@ -17,20 +17,30 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
         description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus animi asperiores cum debitis dolor, dolorem doloremque eum explicabo facilis id ipsum molestiae, nam odio optio quam reiciendis soluta vero voluptatibus?",
         height: 0,
         id: 0,
-        imgSource: "https://sun9-25.userapi.com/impg/QMxCirEPwpaa940l5l5ARcJj3wY4o2POyP2ntQ/8tg4qTsix7o.jpg?size=1440x1920&quality=95&sign=82ff8ac0bd798ad8db4a990ca07b913b&type=album",
         name: "Lorem ipsum",
-        price: 0
+        price: 0,
+        images: []
     })
     const reviews = {average: 4, totalCount: 117}
 
     useEffect(()=> {
-        //fetchProducts()
+        fetchProductDetails()
+
     },[])
 
-    async function fetchProducts() {
+    async function fetchProductDetails() {
         try {
             const response = await axios.get<IProductDetails>(host + "/product/"+id)
             setProduct(response.data)
+        }catch (e) {
+            alert(e)
+        }
+    }
+
+    async function fetchProductImages() {
+        try {
+            const response = await axios.get<IImage[]>(host + "/product/"+id)
+            product.images = response.data
         }catch (e) {
             alert(e)
         }
@@ -43,11 +53,73 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
     return (
         <div className="flex flex-row mx-20 my-10">
             <div className="basis-1/2">
-                <img
-                    src={product.imgSource}
-                    className="w-64 md:w-auto rounded-3xl"
-                    alt=""
-                />
+                <div id="carouselExampleIndicators" className="carousel slide relative" data-bs-ride="carousel">
+                    <div className="carousel-indicators absolute right-0 bottom-0 left-0 flex justify-center p-0 mb-4">
+                        <button
+                            type="button"
+                            data-bs-target="#carouselExampleIndicators"
+                            data-bs-slide-to="0"
+                            className="active"
+                            aria-current="true"
+                            aria-label="Slide 1"
+                        ></button>
+                        <button
+                            type="button"
+                            data-bs-target="#carouselExampleIndicators"
+                            data-bs-slide-to="1"
+                            aria-label="Slide 2"
+                        ></button>
+                        <button
+                            type="button"
+                            data-bs-target="#carouselExampleIndicators"
+                            data-bs-slide-to="2"
+                            aria-label="Slide 3"
+                        ></button>
+                    </div>
+                    <div className="carousel-inner relative w-full overflow-hidden">
+                        <div className="carousel-item active float-left w-full">
+                            <img
+                                src="https://mdbcdn.b-cdn.net/img/new/slides/041.webp"
+                                className="block w-full"
+                                alt="Wild Landscape"
+                            />
+                        </div>
+                        <div className="carousel-item float-left w-full">
+                            <img
+                                src="https://mdbcdn.b-cdn.net/img/new/slides/042.webp"
+                                className="block w-full"
+                                alt="Camera"
+                            />
+                        </div>
+                        <div className="carousel-item float-left w-full">
+                            <img
+                                src="https://mdbcdn.b-cdn.net/img/new/slides/043.webp"
+                                className="block w-full"
+                                alt="Exotic Fruits"
+                            />
+                        </div>
+                    </div>
+                    <button
+                        className="carousel-control-prev absolute top-0 bottom-0 flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline left-0"
+                        type="button"
+                        data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="prev"
+                    >
+                        <span className="carousel-control-prev-icon inline-block bg-no-repeat"
+                              aria-hidden="true"></span>
+                        <span className="visually-hidden">Previous</span>
+                    </button>
+                    <button
+                        className="carousel-control-next absolute top-0 bottom-0 flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline right-0"
+                        type="button"
+                        data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="next"
+                    >
+                        <span className="carousel-control-next-icon inline-block bg-no-repeat"
+                              aria-hidden="true"></span>
+                        <span className="visually-hidden">Next</span>
+                    </button>
+                </div>
             </div>
             <div className="basis-1/2  mx-20 ">
                 <div className="flex flex-row flex-wrap justify-between">
