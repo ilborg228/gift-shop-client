@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {IImage, IProductDetails} from "../types/types";
+import {IComment, IProductDetails} from "../types/types";
 import axios from "axios";
 import {host} from "../constants/constants";
 import {useParams} from "react-router-dom";
 import {StarIcon} from "@heroicons/react/solid";
+import Comment from "../components/Comment";
+import CommentForm from "../components/CommentForm";
 
 interface ProductDetailsProps {
 
@@ -12,37 +14,52 @@ interface ProductDetailsProps {
 const ProductDetails: React.FC<ProductDetailsProps> = () => {
 
     const {id} = useParams()
-    const [product, setProduct] = useState<IProductDetails>({
-        categoryId: 0,
-        description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus animi asperiores cum debitis dolor, dolorem doloremque eum explicabo facilis id ipsum molestiae, nam odio optio quam reiciendis soluta vero voluptatibus?",
-        height: 0,
-        id: 0,
-        name: "Lorem ipsum",
-        price: 0,
-        images: []
-    })
+    const [product, setProduct] = useState<IProductDetails>()
+    const [comments, setComments] = useState<IComment[]>([])
     const reviews = {average: 4, totalCount: 117}
 
     useEffect(()=> {
         fetchProductDetails()
-
+    })
+    useEffect(()=> {
+        fetchComments()
     },[])
 
     async function fetchProductDetails() {
         try {
-            const response = await axios.get<IProductDetails>(host + "/product/"+id)
-            setProduct(response.data)
-        }catch (e) {
-            alert(e)
+            await axios
+                .get<IProductDetails>(host + "/products/" + id)
+                .then((response)=>setProduct(response.data))
+        } catch (ex) {
+            alert(ex)
         }
     }
 
-    async function fetchProductImages() {
+    async function fetchComments() {
         try {
-            const response = await axios.get<IImage[]>(host + "/product/"+id)
-            product.images = response.data
-        }catch (e) {
-            alert(e)
+            await axios
+                .get<IComment[]>(host + "/products/" + id + "/comments")
+                .then((response)=> {
+                    setComments(response.data)
+                    console.log(response.data)
+                })
+        } catch (ex) {
+            alert(ex)
+        }
+    }
+
+    async function submitComment(text: string, scoreValue: string) {
+        try {
+            await axios
+                .post(host + "/comments",
+                    {
+                        text: text,
+                        productId: product?.id,
+                        scoreValue: scoreValue
+                    })
+                .then(()=>fetchComments())
+        } catch (ex) {
+            alert(ex)
         }
     }
 
@@ -50,81 +67,36 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
         return classes.filter(Boolean).join(' ')
     }
 
+    function genImgBlock(imageUrl: string | undefined) {
+        if (imageUrl !== undefined)
+            return (
+                <div className="basis-1/2 mx-5">
+                    <img
+                        src={imageUrl}
+                        className="block w-full"
+                        alt="primary"
+                    />
+                </div>
+            )
+    }
+
     return (
         <div className="flex flex-row mx-20 my-10">
             <div className="basis-1/2">
-                <div id="carouselExampleIndicators" className="carousel slide relative" data-bs-ride="carousel">
-                    <div className="carousel-indicators absolute right-0 bottom-0 left-0 flex justify-center p-0 mb-4">
-                        <button
-                            type="button"
-                            data-bs-target="#carouselExampleIndicators"
-                            data-bs-slide-to="0"
-                            className="active"
-                            aria-current="true"
-                            aria-label="Slide 1"
-                        ></button>
-                        <button
-                            type="button"
-                            data-bs-target="#carouselExampleIndicators"
-                            data-bs-slide-to="1"
-                            aria-label="Slide 2"
-                        ></button>
-                        <button
-                            type="button"
-                            data-bs-target="#carouselExampleIndicators"
-                            data-bs-slide-to="2"
-                            aria-label="Slide 3"
-                        ></button>
-                    </div>
-                    <div className="carousel-inner relative w-full overflow-hidden">
-                        <div className="carousel-item active float-left w-full">
-                            <img
-                                src="https://mdbcdn.b-cdn.net/img/new/slides/041.webp"
-                                className="block w-full"
-                                alt="Wild Landscape"
-                            />
-                        </div>
-                        <div className="carousel-item float-left w-full">
-                            <img
-                                src="https://mdbcdn.b-cdn.net/img/new/slides/042.webp"
-                                className="block w-full"
-                                alt="Camera"
-                            />
-                        </div>
-                        <div className="carousel-item float-left w-full">
-                            <img
-                                src="https://mdbcdn.b-cdn.net/img/new/slides/043.webp"
-                                className="block w-full"
-                                alt="Exotic Fruits"
-                            />
-                        </div>
-                    </div>
-                    <button
-                        className="carousel-control-prev absolute top-0 bottom-0 flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline left-0"
-                        type="button"
-                        data-bs-target="#carouselExampleIndicators"
-                        data-bs-slide="prev"
-                    >
-                        <span className="carousel-control-prev-icon inline-block bg-no-repeat"
-                              aria-hidden="true"></span>
-                        <span className="visually-hidden">Previous</span>
-                    </button>
-                    <button
-                        className="carousel-control-next absolute top-0 bottom-0 flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline right-0"
-                        type="button"
-                        data-bs-target="#carouselExampleIndicators"
-                        data-bs-slide="next"
-                    >
-                        <span className="carousel-control-next-icon inline-block bg-no-repeat"
-                              aria-hidden="true"></span>
-                        <span className="visually-hidden">Next</span>
-                    </button>
+                <img
+                    src={product?.imageUrl}
+                    className="block w-full"
+                    alt="primary"
+                />
+                <div className="flex flex-row my-10">
+                    {genImgBlock(product?.images[0])}
+                    {genImgBlock(product?.images[1])}
                 </div>
             </div>
             <div className="basis-1/2  mx-20 ">
                 <div className="flex flex-row flex-wrap justify-between">
-                    <h1 className="text-3xl text-gray-700">{product.name}</h1>
-                    <h3 className="text-2xl text-gray-700">{product.price} ₽</h3>
+                    <h1 className="text-3xl text-gray-700">{product?.name}</h1>
+                    <h3 className="text-2xl text-gray-700">{product?.price} ₽</h3>
                 </div>
                 {/* Reviews */}
                 <div className="mt-6">
@@ -143,12 +115,33 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
                             ))}
                         </div>
                         <p className="sr-only">{reviews.average} out of 5 stars</p>
-                        <a href={"#"} className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                        <p className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
                             {reviews.totalCount} reviews
-                        </a>
+                        </p>
                     </div>
                 </div>
+                <hr className="mx-5 my-5"/>
+
+                <h1 className="text-3xl text-gray-700">Описание</h1>
+                <p className="my-5 text-gray-500">{product?.description}</p>
+
+                <button
+                    type="submit"
+                    className="my-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                >
+                    Добавить в корзину
+                </button>
+
+                <h1 className="text-3xl text-gray-700 my-5">Комментарии</h1>
+
+                <CommentForm onCreate={submitComment}/>
+
+                {comments.length > 0 ? comments.map((comment) => (
+                    <Comment comment={comment}/>
+                )) : <p className="my-5 text-gray-500">На данный момент комментариев нет. Вы можете быть первым!</p>}
+
             </div>
+
         </div>
     );
 };

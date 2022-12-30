@@ -8,12 +8,13 @@ export interface IProduct {
     name: string,
     price: number,
     categoryId: number
+    imageUrl: string
 }
 
 export interface IProductDetails extends IProduct{
     height: number,
     description: string,
-    images: IImage[]
+    images: string[]
 }
 
 export interface ICategory {
@@ -28,10 +29,5 @@ export interface IComment {
     text: string
     productId: number
     creation: Date,
-    scoreValue: string
-}
-
-export interface IImage {
-    imgSource: string,
-    primaryImage: boolean
+    scoreValue: number
 }
