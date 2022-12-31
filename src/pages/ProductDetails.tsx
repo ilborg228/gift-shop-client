@@ -20,7 +20,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
 
     useEffect(()=> {
         fetchProductDetails()
-    })
+    },[])
     useEffect(()=> {
         fetchComments()
     },[])

@@ -2,10 +2,55 @@ import { Disclosure } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import {navigation} from "../constants/constants";
 import {Link} from "react-router-dom";
+import {useContext} from "react";
+import {AuthContext} from "../context";
 
 const Navbar = () => {
+
+    const {userId, setUserId} = useContext(AuthContext)
+
     function classNames(...classes: string[]) {
         return classes.filter(Boolean).join(' ')
+    }
+
+    function genLoginButton() {
+        if (userId === 0)
+            return (
+                <div>
+                    <Link
+                        to="/login"
+                        className={classNames(
+                            'text-gray-300  hover:text-white',
+                            'px-3 py-2 rounded-md text-sm font-medium'
+                        )}
+                    >
+                        Войти
+                    </Link>
+                    <Link
+                        to="/registration"
+                        className={classNames(
+                            'bg-gray-700 text-white',
+                            'px-3 py-2 rounded-md text-sm font-medium'
+                        )}
+                    >
+                        Зарегистрироваться
+                    </Link>
+                </div>
+            )
+        else
+            return (
+                <div>
+                    <button
+                        onClick={()=>{setUserId(0)}}
+                        className={classNames(
+                            'text-gray-300  hover:text-white',
+                            'px-3 py-2 rounded-md text-sm font-medium'
+                        )}
+                    >
+                        Выйти
+                    </button>
+                </div>
+            )
     }
 
     return (
@@ -57,24 +102,7 @@ const Navbar = () => {
                                 </div>
                             </div>
                             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                                <Link
-                                    to="#"
-                                    className={classNames(
-                                        'text-gray-300  hover:text-white',
-                                        'px-3 py-2 rounded-md text-sm font-medium'
-                                    )}
-                                >
-                                    Войти
-                                </Link>
-                                <Link
-                                    to="#"
-                                    className={classNames(
-                                        'bg-gray-700 text-white',
-                                        'px-3 py-2 rounded-md text-sm font-medium'
-                                    )}
-                                >
-                                    Зарегестрироваться
-                                </Link>
+                                {genLoginButton()}
                             </div>
                         </div>
                     </div>
