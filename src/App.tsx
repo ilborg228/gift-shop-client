@@ -6,6 +6,7 @@ import ProductDetails from "./pages/ProductDetails";
 import LoginPage from "./pages/LoginPage";
 import RegistrationPage from "./pages/RegistrationPage";
 import {AuthContext} from "./context";
+import HomePage from "./pages/HomePage";
 
 function App() {
 
@@ -15,7 +16,8 @@ function App() {
     <AuthContext.Provider value={{userId, setUserId}}>
         <Navbar/>
         <Routes>
-            <Route path={"/store"} element={<ProductList categoryId={1}/>}/>
+            <Route path={"/"} element={<HomePage/>}/>
+            <Route path={"/store"} element={<ProductList categoryId={1} categoryName={'Гжель'}/>}/>
             <Route path={"/products/:id"} element={<ProductDetails/>}/>
             <Route path={"/registration"} element={<RegistrationPage/>}/>
             <Route path={"/login"} element={<LoginPage/>}/>
