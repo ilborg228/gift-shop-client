@@ -21,7 +21,8 @@ const ProductList: React.FC<ProductListProps> = ({categoryId, categoryName}) => 
                 .get<IProduct[]>(host + "/categories/"+categoryId+"/products", {
                     params:{
                         "order_by":"ID",
-                        "page": page
+                        "page": page,
+                        "page_size": 16
                     }})
             setProducts(response.data)
         }catch (e) {
@@ -36,7 +37,8 @@ const ProductList: React.FC<ProductListProps> = ({categoryId, categoryName}) => 
     return (
         <div className="bg-white">
             <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-                <h1 className="text-center text-3xl font-bold tracking-tight text-gray-900">{categoryName}</h1>
+                <h1 className="mb-5 text-center text-3xl font-bold tracking-tight text-gray-900">{categoryName}</h1>
+                <hr className="m-5"/>
 
                 <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
                     {products.map((product) => (

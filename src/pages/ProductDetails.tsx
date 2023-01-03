@@ -120,7 +120,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
                         </p>
                     </div>
                 </div>
-                <hr className="mx-5 my-5"/>
+                <hr className="m-5"/>
 
                 <h1 className="text-3xl text-gray-700">Описание</h1>
                 <p className="my-5 text-gray-500">{product?.description}</p>
