@@ -14,6 +14,7 @@ const Navbar = () => {
     }
 
     function genLoginButton() {
+        console.log(userId)
         if (userId === 0)
             return (
                 <div>
@@ -73,18 +74,18 @@ const Navbar = () => {
 
                             <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
                                 <div className="flex-shrink-0 flex items-center">
-                                    <a href={'/'} className="group">
+                                    <Link to={'/'} className="group">
                                     <img
                                         className="block lg:hidden h-8 w-auto"
                                         src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
                                         alt="Workflow"
-                                    /></a>
-                                    <a href={'/'} className="group">
+                                    /></Link>
+                                    <Link to={'/'} className="group">
                                     <img
                                         className="hidden lg:block h-8 w-auto"
                                         src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
                                         alt="Workflow"
-                                    /></a>
+                                    /></Link>
                                 </div>
                                 <div className="hidden sm:block sm:ml-6">
                                     <div className="flex space-x-4">
