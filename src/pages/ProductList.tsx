@@ -1,7 +1,7 @@
 import ProductCard from "../components/ProductCard";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {IProduct} from "../types/types";
+import {IProduct, IProductList} from "../types/types";
 import Pagination from "../components/Pagination";
 import {host} from "../constants/constants";
 
@@ -12,22 +12,29 @@ interface ProductListProps{
 
 const ProductList: React.FC<ProductListProps> = ({categoryId, categoryName}) => {
 
+    const pageSize = 16
     const [page, setPage] = useState<number>(0)
+    const [countProducts, setCountProducts] = useState<number>(0)
     const [products, setProducts] = useState<IProduct[]>([])
 
     async function fetchProducts() {
         try {
             const response = await axios
-                .get<IProduct[]>(host + "/categories/"+categoryId+"/products", {
+                .get<IProductList>(host + "/categories/"+categoryId+"/products", {
                     params:{
                         "order_by":"ID",
                         "page": page,
-                        "page_size": 16
+                        "page_size": pageSize
                     }})
-            setProducts(response.data)
-        }catch (e) {
-            alert(e)
+            setProducts(response.data.products)
+            setCountProducts(response.data.count)
+        }catch (ex) {
+            alert(ex)
         }
+    }
+
+    function canIncrementPage(): boolean {
+        return countProducts>pageSize*(page+1)
     }
 
     useEffect(()=> {
@@ -36,8 +43,8 @@ const ProductList: React.FC<ProductListProps> = ({categoryId, categoryName}) => 
 
     return (
         <div className="bg-white">
-            <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-                <h1 className="mb-5 text-center text-3xl font-bold tracking-tight text-gray-900">{categoryName}</h1>
+            <div className="max-w-2xl my-6 mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+                <h1 className="mb-5 text-center text-5xl font-bold tracking-tight text-gray-900">{categoryName}</h1>
                 <hr className="m-5"/>
 
                 <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
@@ -46,7 +53,7 @@ const ProductList: React.FC<ProductListProps> = ({categoryId, categoryName}) => 
                     ))}
                 </div>
             </div>
-            <Pagination  page={page} setPage={setPage}/>
+            <Pagination canIncrementPage={canIncrementPage()}  page={page} setPage={setPage}/>
         </div>
     )
 }

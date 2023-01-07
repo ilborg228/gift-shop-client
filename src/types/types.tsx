@@ -11,6 +11,11 @@ export interface IProduct {
     imageUrl: string
 }
 
+export interface IProductList {
+    products: Array<IProduct>
+    count: number
+}
+
 export interface IProductDetails extends IProduct{
     height: number
     description: string

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import ImageSlider from "../components/ImageSlider";
-import {IProduct} from "../types/types";
+import {IProduct, IProductList} from "../types/types";
 import axios from "axios";
 import {host} from "../constants/constants";
 import ProductCard from "../components/ProductCard";
@@ -14,8 +14,8 @@ const HomePage = () => {
             const response = await axios
                 .get<IProduct[]>(host + "/products")
             setProducts(response.data)
-        }catch (e) {
-            alert(e)
+        }catch (ex) {
+            alert(ex)
         }
     }
 
