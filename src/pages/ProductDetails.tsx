@@ -81,8 +81,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
     }
 
     return (
-        <div className="flex flex-row mx-20 my-10">
-            <div className="basis-1/2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mx-20 my-10">
+            <div className="">
                 <img
                     src={product?.imageUrl}
                     className="block w-full"
@@ -93,7 +93,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
                     {genImgBlock(product?.images[1])}
                 </div>
             </div>
-            <div className="basis-1/2  mx-20 ">
+            <div className="mx-20 ">
                 <div className="flex flex-row flex-wrap justify-between">
                     <h1 className="text-3xl text-gray-700">{product?.name}</h1>
                     <h3 className="text-2xl text-gray-700">{product?.price} ₽</h3>
