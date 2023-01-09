@@ -8,6 +8,7 @@ import RegistrationPage from "./pages/RegistrationPage";
 import {AuthContext} from "./context";
 import HomePage from "./pages/HomePage";
 import ContactsPage from "./pages/ContactsPage";
+import LawInfoPage from "./pages/LawInfoPage";
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
             <Route path={"/registration"} element={<RegistrationPage/>}/>
             <Route path={"/login"} element={<LoginPage/>}/>
             <Route path={"/contacts"} element={<ContactsPage/>}/>
+            <Route path={"/law-info"} element={<LawInfoPage/>}/>
         </Routes>
     </AuthContext.Provider>
     );
