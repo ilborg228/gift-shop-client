@@ -24,7 +24,7 @@ const ImageSlider = () => {
     };
 
     return (
-        <div className='m-auto mt-10 max-w-[1000px] h-[480px] relative group'>
+        <div className='m-auto mt-10 max-w-[1225px] h-[480px] relative group'>
             <div
                 style={{ backgroundImage: `url(${slides[currentIndex].url})` }}
                 className='w-full h-full rounded-2xl bg-center bg-cover duration-500'
