@@ -9,24 +9,27 @@ import {AuthContext} from "./context";
 import HomePage from "./pages/HomePage";
 import ContactsPage from "./pages/ContactsPage";
 import LawInfoPage from "./pages/LawInfoPage";
+import StorePage from "./pages/StorePage";
 
 function App() {
 
     const [userId, setUserId] = useState(0)
 
     return (
-    <AuthContext.Provider value={{userId, setUserId}}>
-        <Navbar/>
-        <Routes>
-            <Route path={"/"} element={<HomePage/>}/>
-            <Route path={"/store"} element={<ProductList categoryId={1} categoryName={'Гжель'}/>}/>
-            <Route path={"/products/:id"} element={<ProductDetails/>}/>
-            <Route path={"/registration"} element={<RegistrationPage/>}/>
-            <Route path={"/login"} element={<LoginPage/>}/>
-            <Route path={"/contacts"} element={<ContactsPage/>}/>
-            <Route path={"/law-info"} element={<LawInfoPage/>}/>
-        </Routes>
-    </AuthContext.Provider>
+        <AuthContext.Provider value={{userId, setUserId}}>
+            <Navbar/>
+            <Routes>
+                <Route path={"/"} element={<HomePage/>}/>
+                <Route path={"/store/:id"} element={<StorePage/>}/>
+                <Route path={"/store"} element={<StorePage/>}/>
+                <Route path={"/products/:id"} element={<ProductDetails/>}/>
+                <Route path={"/category/:id"} element={<ProductList/>}/>
+                <Route path={"/registration"} element={<RegistrationPage/>}/>
+                <Route path={"/login"} element={<LoginPage/>}/>
+                <Route path={"/contacts"} element={<ContactsPage/>}/>
+                <Route path={"/law-info"} element={<LawInfoPage/>}/>
+            </Routes>
+        </AuthContext.Provider>
     );
 }
 

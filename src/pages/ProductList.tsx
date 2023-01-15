@@ -4,13 +4,14 @@ import axios from "axios";
 import {IProduct, IProductList} from "../types/types";
 import Pagination from "../components/Pagination";
 import {host} from "../constants/constants";
+import {useParams} from "react-router-dom";
 
 interface ProductListProps{
-    categoryId: number,
-    categoryName: string
 }
 
-const ProductList: React.FC<ProductListProps> = ({categoryId, categoryName}) => {
+const ProductList: React.FC<ProductListProps> = ({}) => {
+
+    const {id, categoryName} = useParams()
 
     const pageSize = 16
     const [page, setPage] = useState<number>(0)
@@ -20,7 +21,7 @@ const ProductList: React.FC<ProductListProps> = ({categoryId, categoryName}) => 
     async function fetchProducts() {
         try {
             const response = await axios
-                .get<IProductList>(host + "/categories/"+categoryId+"/products", {
+                .get<IProductList>(host + "/categories/"+id+"/products", {
                     params:{
                         "order_by":"ID",
                         "page": page,
@@ -40,6 +41,8 @@ const ProductList: React.FC<ProductListProps> = ({categoryId, categoryName}) => 
     useEffect(()=> {
         fetchProducts()
     },[page])
+
+    console.log(useParams())
 
     return (
         <div className="bg-white">

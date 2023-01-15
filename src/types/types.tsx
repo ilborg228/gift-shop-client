@@ -24,9 +24,9 @@ export interface IProductDetails extends IProduct{
 
 export interface ICategory {
     categoryName: string
-    imgSource: string
+    imageUrl: string
     id: number
-    child: ICategory
+    parentId: number
 }
 
 export interface IComment {
