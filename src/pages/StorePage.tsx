@@ -19,15 +19,15 @@ const StorePage = () => {
                     params:{
                         "parent_id": id,
                         "page_size": 100
-                    }})
-                .then((response)=>setCategories(response.data))
+                    }
+                }).then((response)=>setCategories(response.data))
         } catch (ex) {
             alert(ex)
         }
     }
     useEffect(()=> {
         fetchCategories()
-    },[])
+    },[id])
 
     return (
         <div>

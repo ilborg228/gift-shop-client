@@ -14,6 +14,7 @@ export interface IProduct {
 export interface IProductList {
     products: Array<IProduct>
     count: number
+    categoryName: string
 }
 
 export interface IProductDetails extends IProduct{
@@ -27,6 +28,7 @@ export interface ICategory {
     imageUrl: string
     id: number
     parentId: number
+    hasChild: boolean
 }
 
 export interface IComment {
