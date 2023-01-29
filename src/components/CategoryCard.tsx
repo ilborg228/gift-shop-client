@@ -7,7 +7,7 @@ interface CategoryCardProps {
     category: ICategory
 }
 
-const CategoryCard: React.FC<CategoryCardProps>= ({category}) => {
+const CategoryCard: React.FC<CategoryCardProps> = ({category}) => {
 
     const {userId} = useContext(AuthContext)
 

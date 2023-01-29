@@ -5,6 +5,7 @@ import axios from "axios";
 import {host} from "../constants/constants";
 import ProductCard from "../components/ProductCard";
 import RecommendationBlock from "../components/RecommendationBlock";
+import Cart from "../components/Cart";
 
 const HomePage = () => {
 
