@@ -3,27 +3,26 @@ import {LockClosedIcon} from "@heroicons/react/solid";
 import axios from "axios";
 import {auth_host} from "../constants/constants";
 import {AuthContext} from "../context";
+import Cookies from "universal-cookie";
 
 const RegistrationPage = () => {
 
-    const {userId, setUserId} = useContext(AuthContext)
+    const cookies = new Cookies();
+    const {setUserId} = useContext(AuthContext)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
     async function registration() {
         try {
-            await axios
-                .post(auth_host + "/auth/token",
-                    {
-                        username: email,
-                        password: password,
-                        grantType: 'registration'
-                    })
-                .then(res=>{
+            await axios.post(auth_host + "/auth/token", {
+                    username: email,
+                    password: password,
+                    grantType: 'registration'
+                }).then(res => {
                     alert('Вы успешно зарегистрировались')
+                    cookies.set("userId", res.data.id, { path: '/' })
                     setUserId(res.data.id)
-                })
-                .catch(reason => alert(reason.response.data.error))
+                }).catch(reason => alert(reason.response.data.error))
         } catch (ex) {
             alert(ex)
         }

@@ -3,28 +3,27 @@ import {LockClosedIcon} from "@heroicons/react/solid";
 import {AuthContext} from "../context";
 import axios from "axios";
 import {auth_host} from "../constants/constants";
+import Cookies from "universal-cookie";
 
 const LoginPage = () => {
 
-    const {userId, setUserId} = useContext(AuthContext)
+    const cookies = new Cookies();
+    const {setUserId} = useContext(AuthContext)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
     async function login() {
         try {
             await axios
-                .post(auth_host + "/auth/token",
-                    {
+                .post(auth_host + "/auth/token", {
                         username: email,
                         password: password,
                         grantType: 'login'
-                    })
-                .then(res=>{
+                }).then(res => {
                     alert('Вы успешно вошли в свой аккаунт')
-                    console.log(res.data.id)
+                    cookies.set("userId", res.data.id, { path: '/' })
                     setUserId(res.data.id)
-                })
-                .catch(reason => alert(reason.response.data.error))
+                }).catch(reason => alert(reason.response.data.error))
         } catch (ex) {
             alert(ex)
         }

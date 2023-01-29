@@ -10,10 +10,12 @@ import HomePage from "./pages/HomePage";
 import ContactsPage from "./pages/ContactsPage";
 import LawInfoPage from "./pages/LawInfoPage";
 import StorePage from "./pages/StorePage";
+import Cookies from "universal-cookie";
 
 function App() {
 
-    const [userId, setUserId] = useState(0)
+    const cookies = new Cookies();
+    const [userId, setUserId] = useState(Number(cookies.get('userId')))
 
     return (
         <AuthContext.Provider value={{userId, setUserId}}>

@@ -3,11 +3,13 @@ import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import {navigation} from "../constants/constants";
 import {Link} from "react-router-dom";
 import {useContext} from "react";
-import {AuthContext} from "../context";
+import {AuthContext, AuthFlag} from "../context";
+import Cookies from "universal-cookie";
 
 const Navbar = () => {
 
-    const {userId, setUserId} = useContext(AuthContext)
+    const cookies = new Cookies();
+    const {userId, setUserId} = useContext<AuthFlag>(AuthContext)
 
     function classNames(...classes: string[]) {
         return classes.filter(Boolean).join(' ')
@@ -42,7 +44,10 @@ const Navbar = () => {
             return (
                 <div>
                     <button
-                        onClick={()=>{setUserId(0)}}
+                        onClick={() => {
+                            cookies.set("userId", 0, { path: '/' })
+                            setUserId(0)
+                        }}
                         className={classNames(
                             'text-gray-300  hover:text-white',
                             'px-3 py-2 rounded-md text-sm font-medium'
