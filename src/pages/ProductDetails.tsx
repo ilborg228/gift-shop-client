@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {IComment, IProductDetails} from "../types/types";
 import axios from "axios";
 import {host} from "../constants/constants";
@@ -6,6 +6,7 @@ import {useParams} from "react-router-dom";
 import {StarIcon} from "@heroicons/react/solid";
 import Comment from "../components/Comment";
 import CommentForm from "../components/CommentForm";
+import {AuthContext} from "../context";
 
 interface ProductDetailsProps {
 
@@ -17,6 +18,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
     const [product, setProduct] = useState<IProductDetails>()
     const [comments, setComments] = useState<IComment[]>([])
     const reviews = {average: 4, totalCount: 117}
+    const {userId} = useContext(AuthContext)
 
     useEffect(()=> {
         fetchProductDetails()
@@ -58,6 +60,25 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
                         scoreValue: scoreValue
                     })
                 .then(()=>fetchComments())
+        } catch (ex) {
+            alert(ex)
+        }
+    }
+
+    async function addToCart() {
+        try {
+            const data = {
+                userId: userId,
+                products: [
+                    {
+                        id: product?.id
+                    }
+                ]
+            }
+
+            await axios
+                .post(host + "/orders", data)
+                .then(()=>alert('Товар добавлен в корзину'))
         } catch (ex) {
             alert(ex)
         }
@@ -126,8 +147,12 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
                 <p className="my-5 text-gray-500">{product?.description}</p>
 
                 <button
+                    disabled={false}
+                    onClick={() => {
+                        addToCart()
+                    }}
                     type="submit"
-                    className="my-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    className="my-10 disabled:bg-indigo-100 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
                     Добавить в корзину
                 </button>

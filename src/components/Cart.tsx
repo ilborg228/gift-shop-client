@@ -1,42 +1,52 @@
-import React, { Fragment, useState } from 'react'
+import React, {Fragment, useContext, useEffect, useState} from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import {XIcon} from "@heroicons/react/solid";
+import {IOrder, IProductDetails} from "../types/types";
+import axios from "axios";
+import {host} from "../constants/constants";
+import {AuthContext} from "../context";
 
-const products = [
-    {
-        id: 1,
-        name: 'Throwback Hip Bag',
-        href: '#',
-        color: 'Salmon',
-        price: '$90.00',
-        quantity: 1,
-        imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg',
-        imageAlt: 'Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.',
-    },
-    {
-        id: 2,
-        name: 'Medium Stuff Satchel',
-        href: '#',
-        color: 'Blue',
-        price: '$32.00',
-        quantity: 1,
-        imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg',
-        imageAlt:
-            'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
-    },
-
-    // More products...
-]
-
-interface IOrderProps {
+interface CartProps {
     openCart: boolean
     setOpenCart: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Cart: React.FC<IOrderProps> = ({openCart, setOpenCart})  => {
+const Cart: React.FC<CartProps> = ({openCart, setOpenCart})  => {
 
     function calculateSubtotal(): string {
         return "300₽"
+    }
+
+    const [address, setAddress] = useState('')
+    const [order, setOrder] = useState<IOrder>()
+    const {userId} = useContext(AuthContext)
+
+    useEffect(()=> {
+        fetchOrders()
+    },[openCart])
+
+
+    async function fetchOrders() {
+        try {
+            await axios
+                .get<IOrder>(host + "/orders?userId=" + userId)
+                .then((response) => {
+                    console.log(response.data)
+                    setOrder(response.data)
+                })
+        } catch (ex) {
+            alert(ex)
+        }
+    }
+
+    async function removeFromOrder(productId: number) {
+        try {
+            await axios
+                .delete<IOrder>(host + "/orders/" + order?.id + "/products/" + productId)
+                .then((response) => setOrder(response.data))
+        } catch (ex) {
+            alert(ex)
+        }
     }
 
     return (
@@ -86,12 +96,12 @@ const Cart: React.FC<IOrderProps> = ({openCart, setOpenCart})  => {
                                             <div className="mt-8">
                                                 <div className="flow-root">
                                                     <ul role="list" className="-my-6 divide-y divide-gray-200">
-                                                        {products.map((product) => (
+                                                        {order?.products.map((product) => (
                                                             <li key={product.id} className="flex py-6">
                                                                 <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                                                     <img
-                                                                        src={product.imageSrc}
-                                                                        alt={product.imageAlt}
+                                                                        src={product.imageUrl}
+                                                                        alt={"alt"}
                                                                         className="h-full w-full object-cover object-center"
                                                                     />
                                                                 </div>
@@ -100,21 +110,24 @@ const Cart: React.FC<IOrderProps> = ({openCart, setOpenCart})  => {
                                                                     <div>
                                                                         <div className="flex justify-between text-base font-medium text-gray-900">
                                                                             <h3>
-                                                                                <a href={product.href}>{product.name}</a>
+                                                                                <a href={"/products/"+product.id}>{product.name}</a>
                                                                             </h3>
                                                                             <p className="ml-4">{product.price}</p>
                                                                         </div>
-                                                                        <p className="mt-1 text-sm text-gray-500">{product.color}</p>
+                                                                        <p className="mt-1 text-sm text-gray-500">{""}</p>
                                                                     </div>
                                                                     <div className="flex flex-1 items-end justify-between text-sm">
-                                                                        <p className="text-gray-500">Qty {product.quantity}</p>
+                                                                        <p className="text-gray-500">Qty {1}</p>
 
                                                                         <div className="flex">
                                                                             <button
+                                                                                onClick={()=>{
+                                                                                    removeFromOrder(product.id)
+                                                                                }}
                                                                                 type="button"
                                                                                 className="font-medium text-indigo-600 hover:text-indigo-500"
                                                                             >
-                                                                                Remove
+                                                                                Убрать
                                                                             </button>
                                                                         </div>
                                                                     </div>
@@ -127,18 +140,37 @@ const Cart: React.FC<IOrderProps> = ({openCart, setOpenCart})  => {
                                         </div>
 
                                         <div className="border-t border-gray-200 py-6 px-4 sm:px-6">
+                                            <div>
+                                                <label htmlFor="email-address" className="sr-only">
+                                                    Ваш адресс:
+                                                </label>
+                                                <input  onChange={event=>{setAddress(event.target.value)}}
+                                                        id="address"
+                                                        name="address"
+                                                        type="address"
+                                                        autoComplete="address"
+                                                        required
+                                                        className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                                                        placeholder="Ваш адресс:"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="border-t border-gray-200 py-6 px-4 sm:px-6">
                                             <div className="flex justify-between text-base font-medium text-gray-900">
                                                 <p>Промежуточный итог</p>
                                                 <p>{calculateSubtotal()}</p>
                                             </div>
                                             <p className="mt-0.5 text-sm text-gray-500">Стоимость доставки будет подсчитанна позже и сообщена дополнительно.</p>
                                             <div className="mt-6">
-                                                <a
-                                                    href="#"
+                                                <button
+                                                    onClick={() => {
+
+                                                    }}
                                                     className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                                                 >
                                                     Создать заказ
-                                                </a>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>

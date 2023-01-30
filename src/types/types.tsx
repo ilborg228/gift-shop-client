@@ -38,3 +38,10 @@ export interface IComment {
     creation: Date
     scoreValue: number
 }
+
+export interface IOrder {
+    id: number
+    products: Array<IProduct>
+    userId: number
+    address: string
+}

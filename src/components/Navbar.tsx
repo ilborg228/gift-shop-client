@@ -19,7 +19,7 @@ const Navbar = () => {
 
     function genLoginButton() {
         console.log(userId)
-        if (userId === 0)
+        if (isNaN(userId) || userId === 0)
             return (
                 <div>
                     <Link
