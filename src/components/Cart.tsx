@@ -13,8 +13,8 @@ interface CartProps {
 
 const Cart: React.FC<CartProps> = ({openCart, setOpenCart})  => {
 
-    function calculateSubtotal(): string {
-        return "300₽"
+    function calculateSubtotal(): number | undefined {
+        return order?.products.map(p => p.price).reduce((partialSum, a) => a + partialSum)
     }
 
     const [address, setAddress] = useState('')
@@ -35,7 +35,7 @@ const Cart: React.FC<CartProps> = ({openCart, setOpenCart})  => {
                     setOrder(response.data)
                 })
         } catch (ex) {
-            alert(ex)
+            setOrder(undefined)
         }
     }
 
@@ -44,6 +44,24 @@ const Cart: React.FC<CartProps> = ({openCart, setOpenCart})  => {
             await axios
                 .delete<IOrder>(host + "/orders/" + order?.id + "/products/" + productId)
                 .then((response) => setOrder(response.data))
+        } catch (ex) {
+            alert(ex)
+        }
+    }
+
+    async function submitOrder() {
+        try {
+            const data = {
+                id: order?.id,
+                address: address
+            }
+
+            await axios
+                .post(host + "/orders/submit", data)
+                .then(()=> {
+                    fetchOrders()
+                    alert('Ваш заказ отпрвлен, а корзина очищена')
+                })
         } catch (ex) {
             alert(ex)
         }
@@ -93,6 +111,13 @@ const Cart: React.FC<CartProps> = ({openCart, setOpenCart})  => {
                                                 </div>
                                             </div>
 
+                                            {order == undefined ?
+                                                <div className="flex justify-center text-base font-medium text-gray-900 mt-10">
+                                                    <p>Ваш заказ не найден! Вы можете добавить товар в корзину</p>
+                                                </div>
+                                                : <div></div>
+                                            }
+
                                             <div className="mt-8">
                                                 <div className="flow-root">
                                                     <ul role="list" className="-my-6 divide-y divide-gray-200">
@@ -121,9 +146,7 @@ const Cart: React.FC<CartProps> = ({openCart, setOpenCart})  => {
 
                                                                         <div className="flex">
                                                                             <button
-                                                                                onClick={()=>{
-                                                                                    removeFromOrder(product.id)
-                                                                                }}
+                                                                                onClick={()=>{removeFromOrder(product.id)}}
                                                                                 type="button"
                                                                                 className="font-medium text-indigo-600 hover:text-indigo-500"
                                                                             >
@@ -151,7 +174,7 @@ const Cart: React.FC<CartProps> = ({openCart, setOpenCart})  => {
                                                         autoComplete="address"
                                                         required
                                                         className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                                                        placeholder="Ваш адресс:"
+                                                        placeholder="Ваш адрес:"
                                                 />
                                             </div>
                                         </div>
@@ -164,9 +187,7 @@ const Cart: React.FC<CartProps> = ({openCart, setOpenCart})  => {
                                             <p className="mt-0.5 text-sm text-gray-500">Стоимость доставки будет подсчитанна позже и сообщена дополнительно.</p>
                                             <div className="mt-6">
                                                 <button
-                                                    onClick={() => {
-
-                                                    }}
+                                                    onClick={() => {submitOrder()}}
                                                     className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                                                 >
                                                     Создать заказ
