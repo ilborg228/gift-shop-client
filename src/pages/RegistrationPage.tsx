@@ -1,32 +1,13 @@
 import React, {useContext, useState} from 'react';
 import {LockClosedIcon} from "@heroicons/react/solid";
-import axios from "axios";
-import {auth_host} from "../constants/constants";
 import {AuthContext} from "../context";
-import Cookies from "universal-cookie";
+import {registration} from "../utils/api";
 
 const RegistrationPage = () => {
 
-    const cookies = new Cookies();
     const {setUserId} = useContext(AuthContext)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-
-    async function registration() {
-        try {
-            await axios.post(auth_host + "/auth/token", {
-                    username: email,
-                    password: password,
-                    grantType: 'registration'
-                }).then(res => {
-                    alert('Вы успешно зарегистрировались')
-                    cookies.set("userId", res.data.id, { path: '/' })
-                    setUserId(res.data.id)
-                }).catch(reason => alert(reason.response.data.error))
-        } catch (ex) {
-            alert(ex)
-        }
-    }
 
     return (
         <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -71,7 +52,7 @@ const RegistrationPage = () => {
 
                     <div>
                         <button
-                            onClick={event=>{event.preventDefault(); registration()}}
+                            onClick={event=>{event.preventDefault(); registration(email, password, setUserId)}}
                             type="submit"
                             className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         >

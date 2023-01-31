@@ -1,10 +1,11 @@
 import ProductCard from "../components/ProductCard";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {IProduct, IProductList} from "../types/types";
+import {IProduct, IProductList} from "../utils/types";
 import Pagination from "../components/Pagination";
-import {host} from "../constants/constants";
+import {host} from "../utils/constants";
 import {useNavigate, useParams} from "react-router-dom";
+import {fetchProductList} from "../utils/api";
 
 interface ProductListProps{
 }
@@ -22,29 +23,14 @@ const ProductList: React.FC<ProductListProps> = ({}) => {
     const [products, setProducts] = useState<IProduct[]>([])
     const [categoryName, setCategoryName] = useState<string>()
 
-    async function fetchProducts() {
-        try {
-            const response = await axios
-                .get<IProductList>(host + "/categories/"+id+"/products", {
-                    params:{
-                        "order_by":"ID",
-                        "page": page,
-                        "page_size": pageSize
-                    }})
-            setProducts(response.data.products)
-            setCountProducts(response.data.count)
-            setCategoryName(response.data.categoryName)
-        } catch (ex) {
-            alert(ex)
-        }
-    }
+
 
     function canIncrementPage(): boolean {
         return countProducts>pageSize*(page+1)
     }
 
     useEffect(()=> {
-        fetchProducts()
+        fetchProductList(id, page, pageSize, setProducts, setCountProducts, setCategoryName)
     },[page])
 
     return (

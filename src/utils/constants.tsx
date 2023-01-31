@@ -1,4 +1,4 @@
-import {IPath} from "../types/types";
+import {IPath} from "./types";
 
 export const host: string = "http://localhost:8080"
 export const auth_host: string = "http://localhost:9000"

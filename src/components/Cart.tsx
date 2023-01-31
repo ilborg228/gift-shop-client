@@ -1,10 +1,9 @@
 import React, {Fragment, useContext, useEffect, useState} from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import {XIcon} from "@heroicons/react/solid";
-import {IOrder, IProductDetails} from "../types/types";
-import axios from "axios";
-import {host} from "../constants/constants";
+import {IOrder} from "../utils/types";
 import {AuthContext} from "../context";
+import {fetchOrders, removeFromOrder, submitOrder} from "../utils/api";
 
 interface CartProps {
     openCart: boolean
@@ -22,50 +21,8 @@ const Cart: React.FC<CartProps> = ({openCart, setOpenCart})  => {
     const {userId} = useContext(AuthContext)
 
     useEffect(()=> {
-        fetchOrders()
+        fetchOrders(userId, setOrder)
     },[openCart])
-
-
-    async function fetchOrders() {
-        try {
-            await axios
-                .get<IOrder>(host + "/orders?userId=" + userId)
-                .then((response) => {
-                    console.log(response.data)
-                    setOrder(response.data)
-                })
-        } catch (ex) {
-            setOrder(undefined)
-        }
-    }
-
-    async function removeFromOrder(productId: number) {
-        try {
-            await axios
-                .delete<IOrder>(host + "/orders/" + order?.id + "/products/" + productId)
-                .then((response) => setOrder(response.data))
-        } catch (ex) {
-            alert(ex)
-        }
-    }
-
-    async function submitOrder() {
-        try {
-            const data = {
-                id: order?.id,
-                address: address
-            }
-
-            await axios
-                .post(host + "/orders/submit", data)
-                .then(()=> {
-                    fetchOrders()
-                    alert('Ваш заказ отпрвлен, а корзина очищена')
-                })
-        } catch (ex) {
-            alert(ex)
-        }
-    }
 
     return (
         <Transition.Root show={openCart} as={Fragment}>
@@ -146,7 +103,7 @@ const Cart: React.FC<CartProps> = ({openCart, setOpenCart})  => {
 
                                                                         <div className="flex">
                                                                             <button
-                                                                                onClick={()=>{removeFromOrder(product.id)}}
+                                                                                onClick={()=>{removeFromOrder(product.id, order, setOrder)}}
                                                                                 type="button"
                                                                                 className="font-medium text-indigo-600 hover:text-indigo-500"
                                                                             >
@@ -187,7 +144,7 @@ const Cart: React.FC<CartProps> = ({openCart, setOpenCart})  => {
                                             <p className="mt-0.5 text-sm text-gray-500">Стоимость доставки будет подсчитанна позже и сообщена дополнительно.</p>
                                             <div className="mt-6">
                                                 <button
-                                                    onClick={() => {submitOrder()}}
+                                                    onClick={() => {submitOrder(order?.id, address, userId, setOrder)}}
                                                     className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                                                 >
                                                     Создать заказ

@@ -1,5 +1,5 @@
 import React from 'react';
-import {IComment} from "../types/types";
+import {IComment} from "../utils/types";
 import {StarIcon} from "@heroicons/react/solid";
 
 interface CommentProps {

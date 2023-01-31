@@ -1,25 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import ProductCard from "./ProductCard";
-import {IProduct} from "../types/types";
-import axios from "axios";
-import {host} from "../constants/constants";
+import {IProduct} from "../utils/types";
+import {fetchProducts} from "../utils/api";
 
 const RecommendationBlock = () => {
 
     const [products, setProducts] = useState<IProduct[]>([])
 
-    async function fetchProducts() {
-        try {
-            const response = await axios
-                .get<IProduct[]>(host + "/products")
-            setProducts(response.data)
-        }catch (ex) {
-            alert(ex)
-        }
-    }
-
     useEffect(()=> {
-        fetchProducts()
+        fetchProducts(setProducts)
     },[])
 
     return (

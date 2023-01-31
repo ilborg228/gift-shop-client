@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import ImageSlider from "../components/ImageSlider";
-import {IProduct, IProductList} from "../types/types";
+import {IProduct, IProductList} from "../utils/types";
 import axios from "axios";
-import {host} from "../constants/constants";
+import {host} from "../utils/constants";
 import ProductCard from "../components/ProductCard";
 import RecommendationBlock from "../components/RecommendationBlock";
 import Cart from "../components/Cart";

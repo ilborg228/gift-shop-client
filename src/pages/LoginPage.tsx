@@ -1,33 +1,13 @@
 import React, {useContext, useState} from 'react';
 import {LockClosedIcon} from "@heroicons/react/solid";
 import {AuthContext} from "../context";
-import axios from "axios";
-import {auth_host} from "../constants/constants";
-import Cookies from "universal-cookie";
+import {login} from "../utils/api";
 
 const LoginPage = () => {
 
-    const cookies = new Cookies();
     const {setUserId} = useContext(AuthContext)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-
-    async function login() {
-        try {
-            await axios
-                .post(auth_host + "/auth/token", {
-                        username: email,
-                        password: password,
-                        grantType: 'login'
-                }).then(res => {
-                    alert('Вы успешно вошли в свой аккаунт')
-                    cookies.set("userId", res.data.id, { path: '/' })
-                    setUserId(res.data.id)
-                }).catch(reason => alert(reason.response.data.error))
-        } catch (ex) {
-            alert(ex)
-        }
-    }
 
     return (
         <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -72,7 +52,7 @@ const LoginPage = () => {
 
                     <div>
                         <button
-                            onClick={event=>{event.preventDefault(); login()}}
+                            onClick={event=>{event.preventDefault(); login(email, password, setUserId)}}
                             type="submit"
                             className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         >

@@ -1,6 +1,6 @@
 import { Disclosure } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
-import {navigation} from "../constants/constants";
+import {navigation} from "../utils/constants";
 import {Link} from "react-router-dom";
 import {useContext, useState} from "react";
 import {AuthContext, AuthFlag} from "../context";

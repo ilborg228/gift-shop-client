@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {ICategory} from "../types/types";
+import {ICategory} from "../utils/types";
 import {AuthContext} from "../context";
 import {Link} from "react-router-dom";
 

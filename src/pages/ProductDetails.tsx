@@ -1,12 +1,13 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {IComment, IProductDetails} from "../types/types";
+import {IComment, IProductDetails} from "../utils/types";
 import axios from "axios";
-import {host} from "../constants/constants";
+import {host} from "../utils/constants";
 import {useParams} from "react-router-dom";
 import {StarIcon} from "@heroicons/react/solid";
 import Comment from "../components/Comment";
 import CommentForm from "../components/CommentForm";
 import {AuthContext} from "../context";
+import {addToCart, fetchComments, fetchProductDetails} from "../utils/api";
 
 interface ProductDetailsProps {
 
@@ -21,34 +22,11 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
     const {userId} = useContext(AuthContext)
 
     useEffect(()=> {
-        fetchProductDetails()
+        fetchProductDetails(id, setProduct)
     },[])
     useEffect(()=> {
-        fetchComments()
+        fetchComments(id, setComments)
     },[])
-
-    async function fetchProductDetails() {
-        try {
-            await axios
-                .get<IProductDetails>(host + "/products/" + id)
-                .then((response)=>setProduct(response.data))
-        } catch (ex) {
-            alert(ex)
-        }
-    }
-
-    async function fetchComments() {
-        try {
-            await axios
-                .get<IComment[]>(host + "/products/" + id + "/comments")
-                .then((response)=> {
-                    setComments(response.data)
-                    console.log(response.data)
-                })
-        } catch (ex) {
-            alert(ex)
-        }
-    }
 
     async function submitComment(text: string, scoreValue: string) {
         try {
@@ -56,29 +34,10 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
                 .post(host + "/comments",
                     {
                         text: text,
-                        productId: product?.id,
+                        productId: id,
                         scoreValue: scoreValue
                     })
-                .then(()=>fetchComments())
-        } catch (ex) {
-            alert(ex)
-        }
-    }
-
-    async function addToCart() {
-        try {
-            const data = {
-                userId: userId,
-                products: [
-                    {
-                        id: product?.id
-                    }
-                ]
-            }
-
-            await axios
-                .post(host + "/orders", data)
-                .then(()=>alert('Товар добавлен в корзину'))
+                .then(()=>fetchComments(id, setComments))
         } catch (ex) {
             alert(ex)
         }
@@ -149,7 +108,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
                 <button
                     disabled={false}
                     onClick={() => {
-                        addToCart()
+                        addToCart(userId, id)
                     }}
                     type="submit"
                     className="my-10 disabled:bg-indigo-100 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

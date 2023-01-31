@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import axios from "axios";
-import {ICategory} from "../types/types";
-import {host} from "../constants/constants";
+import {ICategory} from "../utils/types";
 import CategoryCard from "../components/CategoryCard";
 import {useNavigate, useParams} from "react-router-dom";
+import {fetchCategories} from "../utils/api";
 
 
 const StorePage = () => {
@@ -12,21 +11,8 @@ const StorePage = () => {
     const navigate = useNavigate()
     const [categories, setCategories] = useState<ICategory[]>([])
 
-    async function fetchCategories() {
-        try {
-            await axios
-                .get<ICategory[]>(host + "/categories", {
-                    params:{
-                        "parent_id": id,
-                        "page_size": 100
-                    }
-                }).then((response)=>setCategories(response.data))
-        } catch (ex) {
-            alert(ex)
-        }
-    }
     useEffect(()=> {
-        fetchCategories()
+        fetchCategories(id, setCategories)
     },[id])
 
     return (
