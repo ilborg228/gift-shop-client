@@ -1,3 +1,9 @@
+export interface IError {
+    code: number
+    error: string
+    description: string
+}
+
 export interface IPath {
     name: string
     href: string
