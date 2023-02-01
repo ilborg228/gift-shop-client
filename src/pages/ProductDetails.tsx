@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {IComment, IProductDetails} from "../utils/types";
-import axios from "axios";
+import {IComment, IError, IProductDetails} from "../utils/types";
+import axios, {AxiosError} from "axios";
 import {host} from "../utils/constants";
 import {useParams} from "react-router-dom";
 import {StarIcon} from "@heroicons/react/solid";
@@ -29,18 +29,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
     },[])
 
     async function submitComment(text: string, scoreValue: string) {
-        try {
-            await axios
-                .post(host + "/comments",
-                    {
-                        text: text,
-                        productId: id,
-                        scoreValue: scoreValue
-                    })
-                .then(()=>fetchComments(id, setComments))
-        } catch (ex) {
-            alert(ex)
-        }
+        await axios
+            .post(host + "/comments", {
+                    text: text,
+                    productId: id,
+                    scoreValue: scoreValue
+            }).then(()=>fetchComments(id, setComments))
+            .catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
     }
 
     function classNames(...classes: string[]) {

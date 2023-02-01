@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {ICategory} from "../utils/types";
 import CategoryCard from "../components/CategoryCard";
 import {useNavigate, useParams} from "react-router-dom";
-import {fetchCategories} from "../utils/api";
+import {fetchCategories, fetchCategory} from "../utils/api";
 
 
 const StorePage = () => {
@@ -10,15 +10,21 @@ const StorePage = () => {
     const {id} = useParams()
     const navigate = useNavigate()
     const [categories, setCategories] = useState<ICategory[]>([])
+    const [parentCategory, setParentCategory] = useState<ICategory>()
 
     useEffect(()=> {
         fetchCategories(id, setCategories)
     },[id])
+    useEffect(() => {
+        fetchCategory(id, setParentCategory)
+    }, [])
 
     return (
         <div>
             <div className="max-w-2xl my-6 mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-                <h1 className="mb-5 text-center text-5xl font-bold tracking-tight text-gray-900">Все категории:</h1>
+                <h1 className="mb-5 text-center text-5xl font-bold tracking-tight text-gray-900">
+                    {id === undefined ? 'Все категории:' : parentCategory?.categoryName}
+                </h1>
                 <button className='text-blue-400 text-left text-xl ml-6' onClick={() => navigate(-1)}>&lt;Назад</button>
                 <hr className="m-5"/>
 

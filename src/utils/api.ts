@@ -1,7 +1,7 @@
 import axios, {AxiosError} from "axios";
 import {ICategory, IComment, IError, IOrder, IProduct, IProductDetails, IProductList} from "./types";
 import {auth_host, host} from "./constants";
-import {Dispatch, SetStateAction, useContext} from "react";
+import {Dispatch, SetStateAction} from "react";
 import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
@@ -10,7 +10,6 @@ export async function fetchOrders(userId: number, setOrder: Dispatch<SetStateAct
     await axios
         .get<IOrder>(host + "/orders?userId=" + userId)
         .then((response) => {
-            console.log(response.data)
             setOrder(response.data)
         }).catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
@@ -26,7 +25,7 @@ export async function removeFromOrder(productId: number, order: IOrder,
 export async function submitOrder(id: number | undefined, address: string, userId: number,
                                   setOrder: Dispatch<SetStateAction<IOrder | undefined>>) {
     const data = {
-        //id: id,
+        id: id,
         address: address
     }
 
@@ -115,7 +114,7 @@ export async function login(email: string, password: string, setUserId: (userId:
 }
 
 export async function fetchCategories(id: string | undefined,
-                                      setCategories: (value: (((prevState: ICategory[]) => ICategory[]) | ICategory[])) => void) {
+                                      setCategories: Dispatch<SetStateAction<ICategory[]>>) {
     await axios
         .get<ICategory[]>(host + "/categories", {
             params:{
@@ -123,6 +122,15 @@ export async function fetchCategories(id: string | undefined,
                 "page_size": 100
             }
         }).then((response) => setCategories(response.data))
+        .catch((er: AxiosError<IError>) => alert(er.response?.data.error))
+}
+
+export async function fetchCategory(id: string | undefined,
+                                      setCategory: Dispatch<SetStateAction<ICategory | undefined>>) {
+    if (id === undefined) return
+    await axios
+        .get<ICategory>(host + "/categories/" + id)
+        .then((response) => setCategory(response.data))
         .catch((er: AxiosError<IError>) => alert(er.response?.data.error))
 }
 
