@@ -1,8 +1,14 @@
 import {createContext} from "react";
+import {IUser} from "../utils/types";
 
 export type AuthFlag = {
-    userId: number
-    setUserId: (userId: number) => void
+    user: IUser
+    setUser: (user: IUser) => void
 }
 
-export const AuthContext = createContext<AuthFlag>({userId: 0, setUserId: ()=>{}})
+const defUser: IUser = {
+    id: 0,
+    role: ''
+}
+
+export const AuthContext = createContext<AuthFlag>({user: defUser, setUser: ()=>{}})

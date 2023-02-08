@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {IComment, IError, IProductDetails} from "../utils/types";
+import {IComment, ICommentSummary, IError, IProductDetails} from "../utils/types";
 import axios, {AxiosError} from "axios";
 import {host} from "../utils/constants";
 import {useParams} from "react-router-dom";
@@ -7,7 +7,7 @@ import {StarIcon} from "@heroicons/react/solid";
 import Comment from "../components/Comment";
 import CommentForm from "../components/CommentForm";
 import {AuthContext} from "../context";
-import {addToCart, fetchComments, fetchProductDetails} from "../utils/api";
+import {addToCart, fetchComments, fetchProductDetails, fetchProductsCommentSummary} from "../utils/api";
 
 interface ProductDetailsProps {
 
@@ -18,8 +18,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
     const {id} = useParams()
     const [product, setProduct] = useState<IProductDetails>()
     const [comments, setComments] = useState<IComment[]>([])
-    const reviews = {average: 4, totalCount: 117}
-    const {userId} = useContext(AuthContext)
+    const [commentSummary, setCommentSummary] = useState<ICommentSummary>({averageScore: 4, count: 117})
+    const {user} = useContext(AuthContext)
 
     useEffect(()=> {
         fetchProductDetails(id, setProduct)
@@ -27,6 +27,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
     useEffect(()=> {
         fetchComments(id, setComments)
     },[])
+    useEffect(()=> {
+        fetchProductsCommentSummary(id, setCommentSummary)
+    },[comments])
 
     async function submitComment(text: string, scoreValue: string) {
         await axios
@@ -82,16 +85,16 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
                                 <StarIcon
                                     key={rating}
                                     className={classNames(
-                                        reviews.average > rating ? 'text-gray-900' : 'text-gray-200',
+                                        commentSummary.averageScore > rating ? 'text-gray-900' : 'text-gray-200',
                                         'h-5 w-5 flex-shrink-0'
                                     )}
                                     aria-hidden="true"
                                 />
                             ))}
                         </div>
-                        <p className="sr-only">{reviews.average} out of 5 stars</p>
+                        <p className="sr-only">{commentSummary.averageScore} out of 5 stars</p>
                         <p className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                            {reviews.totalCount} reviews
+                            {commentSummary.count} reviews
                         </p>
                     </div>
                 </div>
@@ -103,7 +106,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
                 <button
                     disabled={false}
                     onClick={() => {
-                        addToCart(userId, id)
+                        addToCart(user.id, id)
                     }}
                     type="submit"
                     className="my-10 disabled:bg-indigo-100 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

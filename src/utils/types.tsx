@@ -45,9 +45,19 @@ export interface IComment {
     scoreValue: number
 }
 
+export interface ICommentSummary {
+    averageScore: number
+    count: number
+}
+
 export interface IOrder {
     id: number
     products: Array<IProduct>
     userId: number
     address: string
+}
+
+export interface IUser {
+    id: number | undefined,
+    role: string | undefined
 }

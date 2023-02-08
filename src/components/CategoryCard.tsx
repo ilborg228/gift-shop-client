@@ -9,7 +9,7 @@ interface CategoryCardProps {
 
 const CategoryCard: React.FC<CategoryCardProps> = ({category}) => {
 
-    const {userId} = useContext(AuthContext)
+    const {user} = useContext(AuthContext)
 
     return (
         <div>

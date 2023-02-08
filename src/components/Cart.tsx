@@ -18,10 +18,10 @@ const Cart: React.FC<CartProps> = ({openCart, setOpenCart})  => {
 
     const [address, setAddress] = useState('')
     const [order, setOrder] = useState<IOrder>()
-    const {userId} = useContext(AuthContext)
+    const {user} = useContext(AuthContext)
 
     useEffect(()=> {
-        fetchOrders(userId, setOrder)
+        fetchOrders(user?.id, setOrder)
     },[openCart])
 
     return (
@@ -144,7 +144,7 @@ const Cart: React.FC<CartProps> = ({openCart, setOpenCart})  => {
                                             <p className="mt-0.5 text-sm text-gray-500">Стоимость доставки будет подсчитанна позже и сообщена дополнительно.</p>
                                             <div className="mt-6">
                                                 <button
-                                                    onClick={() => {submitOrder(order?.id, address, userId, setOrder)}}
+                                                    onClick={() => {submitOrder(order?.id, address, user?.id, setOrder)}}
                                                     className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                                                 >
                                                     Создать заказ

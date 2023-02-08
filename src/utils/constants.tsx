@@ -3,6 +3,8 @@ import {IPath} from "./types";
 export const host: string = "http://localhost:8080"
 export const auth_host: string = "http://localhost:9000"
 
+export const ROLE_ADMIN = 'ADMIN'
+
 export const navigation: IPath[] = [
     { name: 'Каталог', href: '/store'},
     { name: 'Идеи подарков', href: '/ideas'},

@@ -11,14 +11,15 @@ import ContactsPage from "./pages/ContactsPage";
 import LawInfoPage from "./pages/LawInfoPage";
 import StorePage from "./pages/StorePage";
 import Cookies from "universal-cookie";
+import AdminPage from "./pages/AdminPage";
 
 function App() {
 
     const cookies = new Cookies();
-    const [userId, setUserId] = useState(Number(cookies.get('userId')))
+    const [user, setUser] = useState(cookies.get('user'))
 
     return (
-        <AuthContext.Provider value={{userId, setUserId}}>
+        <AuthContext.Provider value={{user, setUser}}>
             <Navbar/>
             <Routes>
                 <Route path={"/"} element={<HomePage/>}/>
@@ -30,6 +31,7 @@ function App() {
                 <Route path={"/login"} element={<LoginPage/>}/>
                 <Route path={"/contacts"} element={<ContactsPage/>}/>
                 <Route path={"/law-info"} element={<LawInfoPage/>}/>
+                <Route path={"/admin"} element={<AdminPage/>}/>
             </Routes>
         </AuthContext.Provider>
     );

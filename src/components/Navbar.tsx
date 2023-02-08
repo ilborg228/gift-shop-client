@@ -6,11 +6,12 @@ import {useContext, useState} from "react";
 import {AuthContext, AuthFlag} from "../context";
 import Cookies from "universal-cookie";
 import Cart from "./Cart";
+import {IUser} from "../utils/types";
 
 const Navbar = () => {
 
     const cookies = new Cookies();
-    const {userId, setUserId} = useContext<AuthFlag>(AuthContext)
+    const {user, setUser} = useContext<AuthFlag>(AuthContext)
     const [openCart, setOpenCart] = useState(false)
 
     function classNames(...classes: string[]) {
@@ -18,8 +19,8 @@ const Navbar = () => {
     }
 
     function genLoginButton() {
-        console.log(userId)
-        if (isNaN(userId) || userId === 0)
+        console.log(user)
+        if (user.id === undefined || user.id === 0)
             return (
                 <div>
                     <Link
@@ -45,6 +46,7 @@ const Navbar = () => {
         else
             return (
                 <div>
+                    <Cart openCart={openCart} setOpenCart={setOpenCart}/>
                     <button className={classNames(
                         'text-gray-300  hover:text-white',
                         'px-3 py-2 rounded-md text-sm font-medium'
@@ -57,8 +59,12 @@ const Navbar = () => {
                     </button>
                     <button
                         onClick={() => {
-                            cookies.set("userId", 0, { path: '/' })
-                            setUserId(0)
+                            cookies.set("user", null, { path: '/' })
+                            const defUser: IUser = {
+                                id: 0,
+                                role: ''
+                            }
+                            setUser(defUser)
                         }}
                         className={classNames(
                             'text-gray-300  hover:text-white',
@@ -73,7 +79,6 @@ const Navbar = () => {
 
     return (
         <div>
-            <Cart openCart={openCart} setOpenCart={setOpenCart}/>
             <Disclosure as="nav" className="bg-gray-800">
                 {({ open }) => (
                     <>
