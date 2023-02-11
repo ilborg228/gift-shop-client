@@ -1,6 +1,12 @@
-import React from 'react';
+import React, {ChangeEventHandler} from 'react';
 
-const ImageInput = () => {
+interface ImageInputProps {
+    onChange: ChangeEventHandler<HTMLInputElement>
+}
+
+const ImageInput: React.FC<ImageInputProps> = ({onChange}) => {
+
+
     return (
         <div>
             <label className="block text-sm font-medium text-gray-700">Cover photo</label>
@@ -26,7 +32,12 @@ const ImageInput = () => {
                             className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
                         >
                             <span>Upload a file</span>
-                            <input id="file-upload" name="file-upload" type="file" className="sr-only" />
+                            <input
+                                onChange={onChange}
+                                id="file-upload"
+                                name="file-upload"
+                                type="file"
+                                className="sr-only" />
                         </label>
                         <p className="pl-1">or drag and drop</p>
                     </div>

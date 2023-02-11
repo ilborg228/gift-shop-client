@@ -19,8 +19,7 @@ const Navbar = () => {
     }
 
     function genLoginButton() {
-        console.log(user)
-        if (user.id === undefined || user.id === 0)
+        if (user === undefined || user.id === undefined || user.id === 0)
             return (
                 <div>
                     <Link

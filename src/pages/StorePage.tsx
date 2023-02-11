@@ -17,7 +17,7 @@ const StorePage = () => {
     },[id])
     useEffect(() => {
         fetchCategory(id, setParentCategory)
-    }, [])
+    }, [id])
 
     return (
         <div>

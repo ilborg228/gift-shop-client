@@ -1,4 +1,4 @@
-import axios, {AxiosError} from "axios";
+import axios, {AxiosError} from "axios"
 import {
     ICategory,
     IComment,
@@ -9,10 +9,10 @@ import {
     IProductDetails,
     IProductList,
     IUser
-} from "./types";
-import {auth_host, host} from "./constants";
-import {Dispatch, SetStateAction} from "react";
-import Cookies from "universal-cookie";
+} from "./types"
+import {auth_host, host} from "./constants"
+import {Dispatch, SetStateAction} from "react"
+import Cookies from "universal-cookie"
 
 const cookies = new Cookies()
 
@@ -22,6 +22,18 @@ export async function fetchOrders(userId: number | undefined, setOrder: Dispatch
         .then((response) => {
             setOrder(response.data)
         })//.catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
+}
+
+export async function fetchProductId(productName: string | undefined, setProductId: Dispatch<SetStateAction<number | undefined>>) {
+    await axios
+        .get<number>(host + "/products?name=" + productName, {
+            headers: {
+                'produce-view' : 'PRODUCT_BY_NAME'
+            }
+        })
+        .then((response) => {
+            setProductId(response.data)
+        }).catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
 
 export async function removeFromOrder(productId: number, order: IOrder,
@@ -52,6 +64,31 @@ export async function submitOrder(id: number | undefined, address: string, userI
             fetchOrders(userId, setOrder)
             alert('Ваш заказ отпрвлен, а корзина очищена')
         }).catch((er: AxiosError<IError>) => alert(er.response?.data.error))
+}
+
+export async function submitImage(productId: number, file: File, primary: boolean) {
+    let formData = new FormData()
+    formData.append("file", file)
+    await axios
+        .post(host + "/products/" + productId + "/images", formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        .then(response=> {
+            let imageId = response.data
+            if (primary) {
+                makePrimary(productId, imageId)
+            }
+            alert('Изображение загруженно')
+        }).catch((er: AxiosError<IError>) => alert(er.response?.data.error))
+}
+
+export async function makePrimary(productId: number, imageId: number | undefined) {
+    await axios
+        .patch(host + "/products/" + productId + "/images/" + imageId)
+        .then()
+        .catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
 
 export async function fetchProductList(id: string | undefined, page: number, pageSize: number,
@@ -159,7 +196,6 @@ export async function fetchProducts(setProducts: Dispatch<SetStateAction<IProduc
 export async function fetchProductsCommentSummary (productId: string | undefined, setCommentSummary: Dispatch<SetStateAction<ICommentSummary>>) {
     await axios.get<ICommentSummary>(host + '/products/'+ productId +'/comments', {
         headers: {
-            'Access-Control-Allow-Origin': '*',
             'produce-view' : 'COMMENTS_SUMMARY'
         }
     }).then((response) => setCommentSummary(response.data))

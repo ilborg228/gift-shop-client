@@ -14,7 +14,7 @@ const ProductCard: React.FC<ProductCardProps> = ({product}) => {
     const {user} = useContext(AuthContext)
 
     function showAdminButtons() {
-        if (user.role === ROLE_ADMIN)
+        if (user !== undefined && user.role === ROLE_ADMIN)
             return(
                 <button
                     disabled={false}
