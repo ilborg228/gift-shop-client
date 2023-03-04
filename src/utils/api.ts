@@ -1,4 +1,4 @@
-import axios, {AxiosError} from "axios"
+import axios, {AxiosError} from 'axios'
 import {
     ICategory,
     IComment,
@@ -9,16 +9,16 @@ import {
     IProductDetails,
     IProductList,
     IUser
-} from "./types"
-import {auth_host, host} from "./constants"
-import {Dispatch, SetStateAction} from "react"
-import Cookies from "universal-cookie"
+} from './types'
+import {auth_host, host} from './constants'
+import {Dispatch, SetStateAction} from 'react'
+import Cookies from 'universal-cookie';
 
 const cookies = new Cookies()
 
 export async function fetchOrders(userId: number | undefined, setOrder: Dispatch<SetStateAction<IOrder | undefined>>) {
     await axios
-        .get<IOrder>(host + "/orders?userId=" + userId)
+        .get<IOrder>(host + '/orders?userId=' + userId)
         .then((response) => {
             setOrder(response.data)
         })//.catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
@@ -26,7 +26,7 @@ export async function fetchOrders(userId: number | undefined, setOrder: Dispatch
 
 export async function fetchProductId(productName: string | undefined, setProductId: Dispatch<SetStateAction<number | undefined>>) {
     await axios
-        .get<number>(host + "/products?name=" + productName, {
+        .get<number>(host + '/products?name=' + productName, {
             headers: {
                 'produce-view' : 'PRODUCT_BY_NAME'
             }
@@ -36,17 +36,29 @@ export async function fetchProductId(productName: string | undefined, setProduct
         }).catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
 
+export async function fetchCategoryByName(name: string, setCategory: Dispatch<SetStateAction<ICategory | undefined>>) {
+    await axios
+        .get<ICategory>(host + '/categories?name=' + name, {
+            headers: {
+                'produce-view' : 'CATEGORY_BY_NAME'
+            }
+        })
+        .then((response) => {
+            setCategory(response.data)
+        }).catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
+}
+
 export async function removeFromOrder(productId: number, order: IOrder,
                                       setOrder: Dispatch<SetStateAction<IOrder | undefined>>) {
     await axios
-        .delete<IOrder>(host + "/orders/" + order?.id + "/products/" + productId)
+        .delete<IOrder>(host + '/orders/' + order?.id + '/products/' + productId)
         .then((response) => setOrder(response.data))
         .catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
 
 export async function deleteProduct(productId: number) {
     await axios
-        .delete(host + "/products/" + productId)
+        .delete(host + '/products/' + productId)
         .then(() => alert('Товар успешно удален'))
         .catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
@@ -59,18 +71,44 @@ export async function submitOrder(id: number | undefined, address: string, userI
     }
 
     await axios
-        .post(host + "/orders/submit", data)
+        .post(host + '/orders/submit', data)
         .then(()=> {
             fetchOrders(userId, setOrder)
             alert('Ваш заказ отпрвлен, а корзина очищена')
         }).catch((er: AxiosError<IError>) => alert(er.response?.data.error))
 }
 
+export async function submitCategory(name: string, parentId: number | undefined, file: File) {
+    const data = {
+        categoryName: name,
+        parentId: parentId
+    }
+
+    await axios
+        .post<ICategory>(host + '/categories', data)
+        .then((response)=> {
+            submitCategoryImage(file, response.data.id)
+        }).catch((er: AxiosError<IError>) => alert(er.response?.data.error))
+}
+
+export async function submitCategoryImage(file: File, categoryId: number) {
+    let formData = new FormData()
+    formData.append('file', file)
+    await axios
+        .post(host + '/categories/' + categoryId + '/images', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        .then(() => alert('Категория создана'))
+        .catch((er: AxiosError<IError>) => alert(er.response?.data.error))
+}
+
 export async function submitImage(productId: number, file: File, primary: boolean) {
     let formData = new FormData()
-    formData.append("file", file)
+    formData.append('file', file)
     await axios
-        .post(host + "/products/" + productId + "/images", formData, {
+        .post(host + '/products/' + productId + '/images', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -86,7 +124,7 @@ export async function submitImage(productId: number, file: File, primary: boolea
 
 export async function makePrimary(productId: number, imageId: number | undefined) {
     await axios
-        .patch(host + "/products/" + productId + "/images/" + imageId)
+        .patch(host + '/products/' + productId + '/images/' + imageId)
         .then()
         .catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
@@ -96,11 +134,11 @@ export async function fetchProductList(id: string | undefined, page: number, pag
                                        setCountProducts: Dispatch<SetStateAction<number>>,
                                        setCategoryName: Dispatch<SetStateAction<string | undefined>>) {
     await axios
-        .get<IProductList>(host + "/categories/"+id+"/products", {
+        .get<IProductList>(host + '/categories/'+id+'/products', {
             params:{
-                "order_by":"ID",
-                "page": page,
-                "page_size": pageSize
+                'order_by':'ID',
+                'page': page,
+                'page_size': pageSize
             }
         }).then((response)=>{
             setProducts(response.data.products)
@@ -112,14 +150,14 @@ export async function fetchProductList(id: string | undefined, page: number, pag
 export async function fetchProductDetails(id: string | undefined,
                                           setProduct: Dispatch<SetStateAction<IProductDetails | undefined>>) {
     await axios
-        .get<IProductDetails>(host + "/products/" + id)
+        .get<IProductDetails>(host + '/products/' + id)
         .then((response)=>setProduct(response.data))
         .catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
 
 export async function fetchComments(id: string | undefined, setComments: Dispatch<SetStateAction<IComment[]>>) {
     await axios
-        .get<IComment[]>(host + "/products/" + id + "/comments")
+        .get<IComment[]>(host + '/products/' + id + '/comments')
         .then((response)=> {setComments(response.data)})
         .catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
@@ -135,32 +173,32 @@ export async function addToCart(userId: number | undefined, id: string | undefin
     }
 
     await axios
-        .post(host + "/orders", data)
+        .post(host + '/orders', data)
         .then(()=>alert('Товар добавлен в корзину'))
         .catch((er: AxiosError<IError>) => alert(er.response?.data.error))
 }
 
 export async function registration(email: string, password: string, setUser: (user: IUser) => void) {
-    await axios.post(auth_host + "/auth/token", {
+    await axios.post(auth_host + '/auth/token', {
         username: email,
         password: password,
         grantType: 'registration'
     }).then(res => {
         alert('Вы успешно зарегистрировались')
-        cookies.set("user", res.data, { path: '/' })
+        cookies.set('user', res.data, { path: '/' })
         setUser(res.data)
     }).catch((er: AxiosError<IError>) => alert(er.response?.data.error))
 }
 
 export async function login(email: string, password: string, setUser: (user: IUser) => void) {
     await axios
-        .post(auth_host + "/auth/token", {
+        .post(auth_host + '/auth/token', {
             username: email,
             password: password,
             grantType: 'login'
         }).then(res => {
             alert('Вы успешно вошли в свой аккаунт')
-            cookies.set("user", res.data, { path: '/' })
+            cookies.set('user', res.data, { path: '/' })
             setUser(res.data)
         }).catch((er: AxiosError<IError>) => alert(er.response?.data.error))
 }
@@ -168,10 +206,10 @@ export async function login(email: string, password: string, setUser: (user: IUs
 export async function fetchCategories(id: string | undefined,
                                       setCategories: Dispatch<SetStateAction<ICategory[]>>) {
     await axios
-        .get<ICategory[]>(host + "/categories", {
+        .get<ICategory[]>(host + '/categories', {
             params:{
-                "parent_id": id,
-                "page_size": 100
+                'parent_id': id,
+                'page_size': 100
             }
         }).then((response) => setCategories(response.data))
         .catch((er: AxiosError<IError>) => alert(er.response?.data.error))
@@ -181,14 +219,14 @@ export async function fetchCategory(id: string | undefined,
                                       setCategory: Dispatch<SetStateAction<ICategory | undefined>>) {
     if (id === undefined) return
     await axios
-        .get<ICategory>(host + "/categories/" + id)
+        .get<ICategory>(host + '/categories/' + id)
         .then((response) => setCategory(response.data))
         .catch((er: AxiosError<IError>) => alert(er.response?.data.error))
 }
 
 export async function fetchProducts(setProducts: Dispatch<SetStateAction<IProduct[]>>) {
         await axios
-            .get<IProduct[]>(host + "/products")
+            .get<IProduct[]>(host + '/products')
             .then((response) => setProducts(response.data))
             .catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
@@ -211,15 +249,7 @@ export async function addProduct(name: string, description: string, price: strin
     }
 
     await axios
-        .post(host + "/products", data)
+        .post(host + '/products', data)
         .then(()=>alert('Товар успешно создан'))
         .catch((er: AxiosError<IError>) => alert(er.response?.data.error))
-}
-
-export async function uploadImage (productId: string | undefined, file: File) {
-    await axios.post(host + '/images', file, {
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        }
-    })
 }

@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import ImageSlider from "../components/ImageSlider";
+import ImageSlider from "../components/ui/ImageSlider";
 import {IProduct, IProductList} from "../utils/types";
 import axios from "axios";
 import {host} from "../utils/constants";
-import ProductCard from "../components/ProductCard";
+import ProductCard from "../components/ui/ProductCard";
 import RecommendationBlock from "../components/RecommendationBlock";
 import Cart from "../components/Cart";
 

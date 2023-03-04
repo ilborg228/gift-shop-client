@@ -1,9 +1,9 @@
 import React, {useContext} from 'react';
-import {IProduct} from "../utils/types";
-import {AuthContext} from "../context";
+import {IProduct} from "../../utils/types";
+import {AuthContext} from "../../context";
 import {Link} from "react-router-dom";
-import {deleteProduct} from "../utils/api";
-import {ROLE_ADMIN} from "../utils/constants";
+import {deleteProduct} from "../../utils/api";
+import {ROLE_ADMIN} from "../../utils/constants";
 
 interface ProductCardProps{
     product:IProduct

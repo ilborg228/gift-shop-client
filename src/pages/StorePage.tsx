@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {ICategory} from "../utils/types";
-import CategoryCard from "../components/CategoryCard";
+import CategoryCard from "../components/ui/CategoryCard";
 import {useNavigate, useParams} from "react-router-dom";
 import {fetchCategories, fetchCategory} from "../utils/api";
 

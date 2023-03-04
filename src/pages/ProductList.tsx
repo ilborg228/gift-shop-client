@@ -1,8 +1,8 @@
-import ProductCard from "../components/ProductCard";
+import ProductCard from "../components/ui/ProductCard";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {IProduct, IProductList} from "../utils/types";
-import Pagination from "../components/Pagination";
+import Pagination from "../components/ui/Pagination";
 import {host} from "../utils/constants";
 import {useNavigate, useParams} from "react-router-dom";
 import {fetchProductList} from "../utils/api";

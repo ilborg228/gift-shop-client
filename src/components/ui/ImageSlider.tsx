@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BsChevronCompactLeft, BsChevronCompactRight } from 'react-icons/bs';
 import {RxDotFilled} from "react-icons/rx";
-import {slides} from "../utils/constants";
+import {slides} from "../../utils/constants";
 
 const ImageSlider = () => {
 

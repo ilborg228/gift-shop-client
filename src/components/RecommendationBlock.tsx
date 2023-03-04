@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import ProductCard from "./ProductCard";
+import ProductCard from "./ui/ProductCard";
 import {IProduct} from "../utils/types";
 import {fetchProducts} from "../utils/api";
 

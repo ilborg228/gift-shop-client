@@ -4,7 +4,7 @@ import axios, {AxiosError} from "axios";
 import {host} from "../utils/constants";
 import {useParams} from "react-router-dom";
 import {StarIcon} from "@heroicons/react/solid";
-import Comment from "../components/Comment";
+import Comment from "../components/ui/Comment";
 import CommentForm from "../components/CommentForm";
 import {AuthContext} from "../context";
 import {addToCart, fetchComments, fetchProductDetails, fetchProductsCommentSummary} from "../utils/api";
@@ -94,7 +94,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
                         </div>
                         <p className="sr-only">{commentSummary.averageScore} out of 5 stars</p>
                         <p className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                            {commentSummary.count} reviews
+                            {commentSummary.count} отзывов
                         </p>
                     </div>
                 </div>

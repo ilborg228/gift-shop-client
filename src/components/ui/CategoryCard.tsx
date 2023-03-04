@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
-import {ICategory} from "../utils/types";
-import {AuthContext} from "../context";
+import {ICategory} from "../../utils/types";
+import {AuthContext} from "../../context";
 import {Link} from "react-router-dom";
 
 interface CategoryCardProps {

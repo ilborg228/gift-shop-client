@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {addProduct, fetchProductId, makePrimary, submitImage} from "../utils/api";
-import ImageInput from "./ImageInput";
+import ImageInput from "./ui/ImageInput";
 import Toggle from "./ui/Toggle";
 
 const ImageAdd = () => {
@@ -12,7 +12,6 @@ const ImageAdd = () => {
 
     return (
         <div>
-
 
             <div className="m-5 md:grid md:grid-cols-3 md:gap-6">
                 <div className="mt-5 md:col-span-2 md:mt-0">
@@ -37,14 +36,14 @@ const ImageAdd = () => {
                                     </div>
                                 </div>
 
-                                <ImageInput onChange={(event) => setFile(event.currentTarget.files?.item(0))}/>
+                                <ImageInput file={file} onChange={(event) => setFile(event.currentTarget.files?.item(0))}/>
                                 <Toggle enabled={primary} setEnabled={setPrimary}/>
                             </div>
                                 <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                                     <button
                                         onClick={
                                             event=>{
-                                                event.preventDefault();
+                                                event.preventDefault()
                                                 fetchProductId(name, setProductId)
                                                 if (productId) {
                                                     if (file) {
