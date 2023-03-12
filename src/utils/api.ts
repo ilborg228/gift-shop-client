@@ -6,7 +6,7 @@ import {
     IError,
     IOrder,
     IProduct,
-    IProductDetails,
+    IProductDetails, IProductImage,
     IProductList,
     IUser
 } from './types'
@@ -108,13 +108,13 @@ export async function submitImage(productId: number, file: File, primary: boolea
     let formData = new FormData()
     formData.append('file', file)
     await axios
-        .post(host + '/products/' + productId + '/images', formData, {
+        .post<IProductImage>(host + '/products/' + productId + '/images', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
         })
         .then(response=> {
-            let imageId = response.data
+            let imageId = response.data.id
             if (primary) {
                 makePrimary(productId, imageId)
             }
@@ -130,15 +130,17 @@ export async function makePrimary(productId: number, imageId: number | undefined
 }
 
 export async function fetchProductList(id: string | undefined, page: number, pageSize: number,
+                                       orderBy: string, orderByType: string,
                                        setProducts: Dispatch<SetStateAction<IProduct[]>>,
                                        setCountProducts: Dispatch<SetStateAction<number>>,
                                        setCategoryName: Dispatch<SetStateAction<string | undefined>>) {
     await axios
         .get<IProductList>(host + '/categories/'+id+'/products', {
             params:{
-                'order_by':'ID',
                 'page': page,
-                'page_size': pageSize
+                'page_size': pageSize,
+                'order_by': orderBy,
+                'order_by_type': orderByType
             }
         }).then((response)=>{
             setProducts(response.data.products)

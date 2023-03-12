@@ -61,3 +61,10 @@ export interface IUser {
     id: number | undefined,
     role: string | undefined
 }
+
+export interface IProductImage {
+    id: number,
+    imageUrl: string,
+    primaryImage: boolean,
+    product: IProductDetails
+}
