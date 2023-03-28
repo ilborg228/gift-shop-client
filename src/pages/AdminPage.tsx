@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import ProductAdd from "../components/ProductAdd";
 import CategoryAdd from "../components/CategoryAdd";
-import ImageAdd from "../components/ImageAdd";
+import ImageAdd from "../components/ProductImageAdd";
 
 enum State {
     PRODUCT_ADD, PRODUCT_IMAGE_ADD, CATEGORY_ADD

@@ -11,8 +11,6 @@ const ImageAdd = () => {
     const [primary, setPrimary] = useState(false);
     const [name, setName] = useState('');
 
-    let img = <img src={imageSrc}/>;
-
     return (
         <div>
 
@@ -72,7 +70,6 @@ const ImageAdd = () => {
                                 >
                                     Сохранить
                                 </button>
-                                {img}
                             </div>
                         </div>
                     </form>
