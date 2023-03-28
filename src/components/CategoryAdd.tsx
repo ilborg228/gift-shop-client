@@ -8,6 +8,7 @@ const CategoryAdd = () => {
 
     const [category, setCategory] = useState<ICategory>()
     const [file, setFile] = useState<File | null>()
+    const [imageSrc, setImageSrc] = useState('');
     const [name, setName] = useState('');
     const [parentName, setParentName] = useState('');
 
@@ -55,7 +56,18 @@ const CategoryAdd = () => {
                                     </div>
                                 </div>
 
-                                <ImageInput file={file} onChange={( event) => setFile(event.currentTarget.files?.item(0))}/>
+                                <ImageInput imageSrc={imageSrc} file={file} onChange={( event) => {
+                                    let files = event.currentTarget.files;
+                                    setFile(files?.item(0))
+                                    if (FileReader && files && files.length) {
+                                        const fr = new FileReader();
+                                        fr.onload = function () {
+                                            console.log(fr.result)
+                                            setImageSrc(fr.result as string);
+                                        }
+                                        fr.readAsDataURL(files[0]);
+                                    }
+                                }}/>
                             </div>
                             <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                                 <button

@@ -2,16 +2,17 @@ import React, {ChangeEventHandler} from 'react';
 
 interface ImageInputProps {
     file: File | null | undefined
+    imageSrc: string
     onChange: ChangeEventHandler<HTMLInputElement>
 }
 
-const ImageInput: React.FC<ImageInputProps> = ({file, onChange}) => {
+const ImageInput: React.FC<ImageInputProps> = ({file, onChange, imageSrc}) => {
 
     function getImage() {
         if (file) {
             return (
                 <div>
-                    <img src={file.name}/>
+                    <img className="max-w-xs max-h-xs" src={imageSrc}/>
                 </div>
             )
         } else {
@@ -46,7 +47,7 @@ const ImageInput: React.FC<ImageInputProps> = ({file, onChange}) => {
                             htmlFor="file-upload"
                             className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
                         >
-                            <span>Upload a file</span>
+                            <span>Нажмите для загрузки</span>
                             <input
                                 onChange={onChange}
                                 id="file-upload"
@@ -54,9 +55,7 @@ const ImageInput: React.FC<ImageInputProps> = ({file, onChange}) => {
                                 type="file"
                                 className="sr-only" />
                         </label>
-                        <p className="pl-1">or drag and drop</p>
                     </div>
-                    <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
                 </div>
             </div>
         </div>

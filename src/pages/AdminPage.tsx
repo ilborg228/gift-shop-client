@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
 import ProductAdd from "../components/ProductAdd";
-import ImageAdd from "../components/ImageAdd";
 import CategoryAdd from "../components/CategoryAdd";
-import {fetchCategoryByName, submitCategory} from "../utils/api";
+import ImageAdd from "../components/ImageAdd";
 
 enum State {
     PRODUCT_ADD, PRODUCT_IMAGE_ADD, CATEGORY_ADD

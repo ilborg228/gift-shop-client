@@ -3,7 +3,8 @@ import { Dialog, Transition } from '@headlessui/react'
 import {XIcon} from "@heroicons/react/solid";
 import {IOrder} from "../utils/types";
 import {AuthContext} from "../context";
-import {fetchOrders, removeFromOrder, submitOrder} from "../utils/api";
+import {deleteProduct, fetchOrders, removeFromOrder, submitOrder} from "../utils/api";
+import {ROLE_ADMIN} from "../utils/constants";
 
 interface CartProps {
     openCart: boolean
@@ -22,7 +23,6 @@ const Cart: React.FC<CartProps> = ({openCart, setOpenCart})  => {
 
     useEffect(()=> {
         fetchOrders(user?.id, setOrder)
-        console.log(order?.id === undefined)
     },[openCart])
 
     return (
@@ -145,7 +145,6 @@ const Cart: React.FC<CartProps> = ({openCart, setOpenCart})  => {
                                             <p className="mt-0.5 text-sm text-gray-500">Стоимость доставки будет подсчитанна позже и сообщена дополнительно.</p>
                                             <div className="mt-6">
                                                 <button
-                                                    disabled={true}
                                                     onClick={() => {submitOrder(order?.id, address, user?.id, setOrder)}}
                                                     className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                                                 >

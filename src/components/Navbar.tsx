@@ -1,6 +1,6 @@
 import { Disclosure } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
-import {navigation} from "../utils/constants";
+import {navigation, ROLE_ADMIN} from "../utils/constants";
 import {Link} from "react-router-dom";
 import {useContext, useState} from "react";
 import {AuthContext, AuthFlag} from "../context";
@@ -16,6 +16,22 @@ const Navbar = () => {
 
     function classNames(...classes: string[]) {
         return classes.filter(Boolean).join(' ')
+    }
+
+    function showAdminButton() {
+        if (user !== undefined && user.role === ROLE_ADMIN)
+            return(
+                <Link
+                    key={'Панель администратора'}
+                    to={'/admin'}
+                    className={classNames(
+                        'text-gray-300 hover:bg-gray-700 hover:text-white',
+                        'px-3 py-2 rounded-md text-sm font-medium'
+                    )}
+                >
+                    {'Панель администратора'}
+                </Link>
+            )
     }
 
     function genLoginButton() {
@@ -124,6 +140,7 @@ const Navbar = () => {
                                                     {item.name}
                                                 </Link>
                                             ))}
+                                            {showAdminButton()}
                                         </div>
                                     </div>
                                 </div>

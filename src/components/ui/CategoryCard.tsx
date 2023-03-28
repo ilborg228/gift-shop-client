@@ -26,7 +26,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({category}) => {
                         className="w-full h-full object-center object-cover group-hover:opacity-75"
                     />
                 </div>
-                <h3 className="mt-4 text-2xl text-gray-700">{category.categoryName}</h3>
+                <h3 className="mt-4 text-2xl text-gray-700 text-center">{category.categoryName}</h3>
             </Link>
         </div>
     );
