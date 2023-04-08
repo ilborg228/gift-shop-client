@@ -1,12 +1,23 @@
-import React, {useState} from 'react';
-import {addProduct} from "../utils/api";
+import React, {useEffect, useState} from 'react';
+import {addProduct, fetchAllCategories, fetchCategories} from "../utils/api";
+import {ICategory} from "../utils/types";
 
 const ProductAdd = () => {
 
     const [name, setName] = useState<string>('')
     const [price, setPrice] = useState<string>('')
-    const [categoryName, setCategoryName] = useState<string>('')
+    const [categoryId, setCategoryId] = useState<number>(0)
     const [description, setDescription] = useState<string>('')
+    const [categories, setCategories] = useState<ICategory[]>([])
+
+    useEffect(()=> {
+        fetchAllCategories(setCategories).then(()=>console.log(categories))
+    },[])
+
+    const options = categories.map((category) => (
+        <option key={category.id} value={category.id}>
+            {category.categoryName}
+        </option>))
 
     return (
         <div>
@@ -72,27 +83,19 @@ const ProductAdd = () => {
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-3 gap-6">
-                                    <div className="col-span-3 sm:col-span-2">
-                                        <label htmlFor="company-website" className="block text-sm font-medium text-gray-700">
-                                            Название категории
-                                        </label>
-                                        <div className="mt-1 flex rounded-md shadow-sm">
-                                            <input
-                                                onChange={(event)=>setCategoryName(event.target.value)}
-                                                type="text"
-                                                name="company-website"
-                                                id="company-website"
-                                                className="block w-full flex-1 rounded-l-md rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                                placeholder=""
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
+                                <label>
+                                    Название категории
+                                        <select value={categoryId}
+                                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                onChange={(e) => setCategoryId(parseInt(e.target.value))}>
+                                            <option value={0}>Выберите категорию</option>
+                                            {options}
+                                        </select>
+                                </label>
                             </div>
                             <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                                 <button
-                                    onClick={event=>{event.preventDefault(); addProduct(name, description, price, categoryName)}}
+                                    onClick={event=>{event.preventDefault(); addProduct(name, description, price, categoryId)}}
                                     type="submit"
                                     className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                 >

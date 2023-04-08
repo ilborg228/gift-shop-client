@@ -217,6 +217,17 @@ export async function fetchCategories(id: string | undefined,
         .catch((er: AxiosError<IError>) => alert(er.response?.data.error))
 }
 
+export async function fetchAllCategories(setCategories: Dispatch<SetStateAction<ICategory[]>>) {
+    await axios
+        .get<ICategory[]>(host + '/categories', {
+            params:{
+                'page_size': 100,
+                'all': true
+            }
+        }).then((response) => setCategories(response.data))
+        .catch((er: AxiosError<IError>) => alert(er.response?.data.error))
+}
+
 export async function fetchCategory(id: string | undefined,
                                       setCategory: Dispatch<SetStateAction<ICategory | undefined>>) {
     if (id === undefined) return
@@ -242,12 +253,12 @@ export async function fetchProductsCommentSummary (productId: string | undefined
         .catch((er: AxiosError<IError>) => alert(er.response?.data.error))
 }
 
-export async function addProduct(name: string, description: string, price: string, categoryName: string) {
+export async function addProduct(name: string, description: string, price: string, categoryId: number) {
     const data = {
         name: name,
         description: description,
         price: price,
-        categoryName: categoryName
+        categoryId: categoryId
     }
 
     await axios

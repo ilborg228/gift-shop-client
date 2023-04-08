@@ -1,7 +1,6 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import ImageInput from "./ui/ImageInput";
-import Toggle from "./ui/Toggle";
-import {fetchCategory, fetchCategoryByName, fetchProductId, submitCategory, submitImage} from "../utils/api";
+import {fetchAllCategories, submitCategory} from "../utils/api";
 import {ICategory} from "../utils/types";
 
 const CategoryAdd = () => {
@@ -10,7 +9,17 @@ const CategoryAdd = () => {
     const [file, setFile] = useState<File | null>()
     const [imageSrc, setImageSrc] = useState('');
     const [name, setName] = useState('');
-    const [parentName, setParentName] = useState('');
+    const [parentId, setParentId] = useState(0);
+    const [categories, setCategories] = useState<ICategory[]>([])
+
+    useEffect(()=> {
+        fetchAllCategories(setCategories).then(()=>console.log(categories))
+    },[])
+
+    const options = categories.map((category) => (
+        <option key={category.id} value={category.id}>
+            {category.categoryName}
+        </option>))
 
     return (
         <div>
@@ -40,19 +49,15 @@ const CategoryAdd = () => {
 
                                 <div className="grid grid-cols-3 gap-6">
                                     <div className="col-span-3 sm:col-span-2">
-                                        <label htmlFor="company-website" className="block text-sm font-medium text-gray-700">
+                                        <label>
                                             Название родительской категории
+                                            <select value={parentId}
+                                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                    onChange={(e) => setParentId(parseInt(e.target.value))}>
+                                                <option value={0}>Выберите категорию</option>
+                                                {options}
+                                            </select>
                                         </label>
-                                        <div className="mt-1 flex rounded-md shadow-sm">
-                                            <input
-                                                onChange={(event)=>setParentName(event.target.value)}
-                                                type="text"
-                                                name="company-website"
-                                                id="company-website"
-                                                className="block w-full flex-1 rounded-l-md rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                                placeholder=""
-                                            />
-                                        </div>
                                     </div>
                                 </div>
 
@@ -74,13 +79,10 @@ const CategoryAdd = () => {
                                     onClick={
                                         event=>{
                                             event.preventDefault();
-                                            if (parentName != '') {
-                                                fetchCategoryByName(parentName, setCategory)
-                                                if (file) {
-                                                    submitCategory(name, category?.id, file)
-                                                }
-                                            } else if (file) {
-                                                submitCategory(name, category?.id, file)
+                                            if (file) {
+                                                submitCategory(name, parentId, file)
+                                            } else {
+                                                alert('Добавьте файл')
                                             }
                                         }
                                     }

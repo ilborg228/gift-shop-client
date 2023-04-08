@@ -27,8 +27,12 @@ const ProductList: React.FC<ProductListProps> = ({}) => {
     }
 
     useEffect(()=> {
-        fetchProductList(id, page, pageSize, orderBy, orderByType, setProducts, setCountProducts, setCategoryName)
+        reload()
     },[page, orderBy, orderByType])
+
+    function reload() {
+        fetchProductList(id, page, pageSize, orderBy, orderByType, setProducts, setCountProducts, setCategoryName)
+    }
 
     return (
         <div className="bg-white">
@@ -57,7 +61,7 @@ const ProductList: React.FC<ProductListProps> = ({}) => {
                 <hr className="m-5"/>
                 <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
                     {products.map((product) => (
-                        <ProductCard product={product}/>
+                        <ProductCard product={product} reload={reload}/>
                     ))}
                 </div>
             </div>

@@ -5,11 +5,12 @@ import {Link} from "react-router-dom";
 import {deleteProduct} from "../../utils/api";
 import {ROLE_ADMIN} from "../../utils/constants";
 
-interface ProductCardProps{
-    product:IProduct
+interface ProductCardProps {
+    product: IProduct
+    reload: () => void
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({product}) => {
+const ProductCard: React.FC<ProductCardProps> = ({product, reload}) => {
 
     const {user} = useContext(AuthContext)
 
@@ -19,8 +20,9 @@ const ProductCard: React.FC<ProductCardProps> = ({product}) => {
                 <button
                     disabled={false}
                     onClick={() => {
-                        if (window.confirm('Вы уверены что хотите удалить товар?'))
-                            deleteProduct(product.id)
+                        if (window.confirm('Вы уверены что хотите удалить товар?')) {
+                            deleteProduct(product.id).then(() => reload())
+                        }
                     }}
                     type="submit"
                     className="my-3 disabled:bg-indigo-100 flex w-full items-center justify-center rounded-md border border-transparent bg-red-600 py-2 px-2 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
