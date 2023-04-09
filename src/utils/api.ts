@@ -4,7 +4,7 @@ import {
     IComment,
     ICommentSummary,
     IError,
-    IOrder,
+    IOrder, IOrderList,
     IProduct,
     IProductDetails, IProductImage,
     IProductList,
@@ -16,12 +16,35 @@ import Cookies from 'universal-cookie';
 
 const cookies = new Cookies()
 
-export async function fetchOrders(userId: number | undefined, setOrder: Dispatch<SetStateAction<IOrder | undefined>>) {
+export async function fetchOrder(userId: number | undefined, setOrder: Dispatch<SetStateAction<IOrder | undefined>>) {
     await axios
-        .get<IOrder>(host + '/orders?userId=' + userId)
+        .get<IOrder>(host + '/orders/' + userId)
         .then((response) => {
             setOrder(response.data)
         })//.catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
+}
+
+export async function updateOrderStatus(orderId: number, statusId: number) {
+    await axios
+        .patch(host + '/orders/' + orderId + '?statusId=' + statusId)
+        .then((response) => {
+            alert('Статус заказа успешно обновлен')
+        }).catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
+}
+
+export async function fetchOrders(page: number, pageSize: number,
+                                  setOrders: Dispatch<SetStateAction<IOrder[]>>,
+                                  setCountProducts: Dispatch<SetStateAction<number>>) {
+    await axios
+        .get<IOrderList>(host + '/orders',{
+        params:{
+                'page': page,
+                'page_size': pageSize
+        }})
+        .then((response) => {
+            setOrders(response.data.orders)
+            setCountProducts(response.data.count)
+        }).catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
 
 export async function fetchProductId(productName: string | undefined, setProductId: Dispatch<SetStateAction<number | undefined>>) {
@@ -73,7 +96,7 @@ export async function submitOrder(id: number | undefined, address: string, userI
     await axios
         .post(host + '/orders/submit', data)
         .then(()=> {
-            fetchOrders(userId, setOrder)
+            fetchOrder(userId, setOrder)
             alert('Ваш заказ отпрвлен, а корзина очищена')
         }).catch((er: AxiosError<IError>) => alert(er.response?.data.error))
 }

@@ -26,14 +26,14 @@ const Pagination: FC<PaginationProps> = ({page,setPage, canIncrementPage}) => {
                     href="#"
                     className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                 >
-                    Previous
+                    Предыдущая страница
                 </a>
                 <a
                     onClick={()=> incrementPage()}
                     href="#"
                     className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                 >
-                    Next
+                    Следующая страница
                 </a>
             </div>
             <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
@@ -43,7 +43,7 @@ const Pagination: FC<PaginationProps> = ({page,setPage, canIncrementPage}) => {
                         href="#"
                         className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
                     >
-                        Previous
+                        Предыдущая страница
                         <span className="sr-only">Previous</span>
                     </a>
                     {/* Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" */}
@@ -58,7 +58,7 @@ const Pagination: FC<PaginationProps> = ({page,setPage, canIncrementPage}) => {
                         href="#"
                         className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
                     >
-                        Next
+                        Следующая страница
                         <span className="sr-only">Next</span>
                     </a>
                 </nav>

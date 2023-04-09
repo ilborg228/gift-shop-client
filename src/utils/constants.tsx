@@ -12,6 +12,15 @@ export const navigation: IPath[] = [
     { name: 'О программе', href: '/law-info'},
 ]
 
+export const pageSize = 16
+
+export const orderStatuses = [
+    {id: 1, name: 'Создан'},
+    {id: 2, name: 'Подтвержден'},
+    {id: 3, name: 'Доставлен'},
+    {id: 4, name: 'Отменен'}
+]
+
 export const slides = [
     {
         url: 'http://localhost:8080/images/1.jpg',

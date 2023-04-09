@@ -3,8 +3,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import {XIcon} from "@heroicons/react/solid";
 import {IOrder} from "../utils/types";
 import {AuthContext} from "../context";
-import {deleteProduct, fetchOrders, removeFromOrder, submitOrder} from "../utils/api";
-import {ROLE_ADMIN} from "../utils/constants";
+import {fetchOrder, removeFromOrder, submitOrder} from "../utils/api";
 
 interface CartProps {
     openCart: boolean
@@ -22,7 +21,7 @@ const Cart: React.FC<CartProps> = ({openCart, setOpenCart})  => {
     const {user} = useContext(AuthContext)
 
     useEffect(()=> {
-        fetchOrders(user?.id, setOrder)
+        fetchOrder(user?.id, setOrder)
     },[openCart])
 
     return (

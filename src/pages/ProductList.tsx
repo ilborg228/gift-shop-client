@@ -4,6 +4,7 @@ import {IProduct} from "../utils/types";
 import Pagination from "../components/ui/Pagination";
 import {useNavigate, useParams} from "react-router-dom";
 import {fetchProductList} from "../utils/api";
+import {pageSize} from "../utils/constants";
 
 interface ProductListProps{
 }
@@ -14,8 +15,6 @@ const ProductList: React.FC<ProductListProps> = ({}) => {
     const navigate = useNavigate()
     const [orderBy, setOrderBy] = useState<string>("ID")
     const [orderByType, setOrderByType] = useState<string>("ASC")
-
-    const pageSize = 16
     const [page, setPage] = useState<number>(0)
 
     const [countProducts, setCountProducts] = useState<number>(0)

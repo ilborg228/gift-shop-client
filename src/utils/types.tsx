@@ -23,6 +23,11 @@ export interface IProductList {
     categoryName: string
 }
 
+export interface IOrderList {
+    orders: Array<IOrder>
+    count: number
+}
+
 export interface IProductDetails extends IProduct{
     height: number
     description: string
@@ -54,7 +59,9 @@ export interface IOrder {
     id: number
     products: Array<IProduct>
     userId: number
+    orderCreation: string
     address: string
+    statusId: number
 }
 
 export interface IUser {
