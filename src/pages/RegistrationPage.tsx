@@ -1,13 +1,20 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {LockClosedIcon} from "@heroicons/react/solid";
 import {AuthContext} from "../context";
 import {registration} from "../utils/api";
+import {useNavigate} from "react-router-dom";
 
 const RegistrationPage = () => {
 
-    const {setUser} = useContext(AuthContext)
+    const {user, setUser} = useContext(AuthContext)
     const [email, setEmail] = useState('')
+    const navigate = useNavigate()
     const [password, setPassword] = useState('')
+
+    useEffect(()=>{
+        if (user === undefined || user.id === undefined || user.id === 0) {}
+        else navigate('/', {replace:true})
+    },[])
 
     return (
         <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -52,14 +59,14 @@ const RegistrationPage = () => {
 
                     <div>
                         <button
-                            onClick={event=>{event.preventDefault(); registration(email, password, setUser)}}
+                            onClick={event=>{event.preventDefault(); registration(email, password, setUser).then(r => navigate('/', {replace:true}))}}
                             type="submit"
                             className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         >
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3">
                   <LockClosedIcon className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" aria-hidden="true" />
                 </span>
-                            Sign in
+                            Зарегестрироваться
                         </button>
                     </div>
                 </form>
