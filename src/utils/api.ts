@@ -96,8 +96,8 @@ export async function submitOrder(id: number | undefined, address: string, userI
     await axios
         .post(host + '/orders/submit', data)
         .then(()=> {
-            fetchOrder(userId, setOrder)
-            alert('Ваш заказ отпрвлен, а корзина очищена')
+            setOrder(undefined)
+            alert('Ваш заказ создан, а корзина очищена')
         }).catch((er: AxiosError<IError>) => alert(er.response?.data.error))
 }
 

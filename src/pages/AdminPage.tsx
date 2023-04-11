@@ -23,13 +23,13 @@ const AdminPage = () => {
     },[user])
 
     function getForm() {
-        if (state == State.PRODUCT_ADD) {
+        if (state === State.PRODUCT_ADD) {
             return <ProductAdd/>
-        } else if (state == State.PRODUCT_IMAGE_ADD) {
+        } else if (state === State.PRODUCT_IMAGE_ADD) {
             return <ImageAdd/>
-        } else if (state == State.CATEGORY_ADD) {
+        } else if (state === State.CATEGORY_ADD) {
             return <CategoryAdd/>
-        } else if (state == State.ORDERS_LIST) {
+        } else if (state === State.ORDERS_LIST) {
             return <OrdersList/>
         }
     }

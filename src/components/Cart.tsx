@@ -13,7 +13,8 @@ interface CartProps {
 const Cart: React.FC<CartProps> = ({openCart, setOpenCart})  => {
 
     function calculateSubtotal(): number | undefined {
-        return order?.products.map(p => p.price).reduce((partialSum, a) => a + partialSum)
+        if (order?.products && order.products.length > 0)
+            return order?.products.map(p => p.price).reduce((partialSum, a) => a + partialSum)
     }
 
     const [address, setAddress] = useState('')
@@ -68,7 +69,7 @@ const Cart: React.FC<CartProps> = ({openCart, setOpenCart})  => {
                                                 </div>
                                             </div>
 
-                                            {order == undefined ?
+                                            {order === undefined || !order?.products || order.products.length === 0 ?
                                                 <div className="flex justify-center text-base font-medium text-gray-900 mt-10">
                                                     <p>Ваш заказ не найден! Вы можете добавить товар в корзину</p>
                                                 </div>
@@ -144,7 +145,12 @@ const Cart: React.FC<CartProps> = ({openCart, setOpenCart})  => {
                                             <p className="mt-0.5 text-sm text-gray-500">Стоимость доставки будет подсчитанна позже и сообщена дополнительно.</p>
                                             <div className="mt-6">
                                                 <button
-                                                    onClick={() => {submitOrder(order?.id, address, user?.id, setOrder)}}
+                                                    onClick={() => {
+                                                        if (address && address.length > 0) {
+                                                            submitOrder(order?.id, address, user?.id, setOrder)
+                                                        } else
+                                                            alert('Введите адрес')
+                                                    }}
                                                     className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                                                 >
                                                     Создать заказ
