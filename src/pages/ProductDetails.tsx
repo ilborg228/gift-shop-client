@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {IComment, ICommentSummary, IError, IProductDetails} from "../utils/types";
 import axios, {AxiosError} from "axios";
 import {host} from "../utils/constants";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {StarIcon} from "@heroicons/react/solid";
 import Comment from "../components/ui/Comment";
 import CommentForm from "../components/CommentForm";
@@ -20,6 +20,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
     const [comments, setComments] = useState<IComment[]>([])
     const [commentSummary, setCommentSummary] = useState<ICommentSummary>({averageScore: 4, count: 117})
     const {user} = useContext(AuthContext)
+    const navigate = useNavigate()
 
     useEffect(()=> {
         fetchProductDetails(id, setProduct)
@@ -106,7 +107,10 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
                 <button
                     disabled={false}
                     onClick={() => {
-                        addToCart(user.id, id)
+                        if (user && user.id && user.id > 0)
+                            addToCart(user.id, id)
+                        else
+                            navigate('/login', {replace:true})
                     }}
                     type="submit"
                     className="my-10 disabled:bg-indigo-100 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

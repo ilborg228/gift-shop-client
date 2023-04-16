@@ -116,13 +116,13 @@ const Navbar = () => {
                                         <Link to={'/'} className="group">
                                         <img
                                             className="block lg:hidden h-8 w-auto"
-                                            src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
+                                            src={process.env.PUBLIC_URL + "/logo.svg"}
                                             alt="Workflow"
                                         /></Link>
                                         <Link to={'/'} className="group">
                                         <img
                                             className="hidden lg:block h-8 w-auto"
-                                            src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
+                                            src={process.env.PUBLIC_URL + "/logo.svg"}
                                             alt="Workflow"
                                         /></Link>
                                     </div>

@@ -86,6 +86,13 @@ export async function deleteProduct(productId: number) {
         .catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
 
+export async function deleteCategory(categoryId: number) {
+    await axios
+        .delete(host + '/categories/' + categoryId)
+        .then(() => alert('Категория успешно удалена'))
+        .catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
+}
+
 export async function submitOrder(id: number | undefined, address: string, userId: number | undefined,
                                   setOrder: Dispatch<SetStateAction<IOrder | undefined>>) {
     const data = {
