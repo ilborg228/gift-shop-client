@@ -16,7 +16,7 @@ import Cookies from 'universal-cookie';
 
 const cookies = new Cookies()
 
-export async function fetchOrder(userId: number | undefined, setOrder: Dispatch<SetStateAction<IOrder | undefined>>) {
+export async function fetchOrder(userId: number | undefined, setOrder: (order: IOrder) => void) {
     await axios
         .get<IOrder>(host + '/orders/' + userId)
         .then((response) => {
@@ -32,12 +32,13 @@ export async function updateOrderStatus(orderId: number, statusId: number) {
         }).catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
 
-export async function fetchOrders(page: number, pageSize: number,
-                                  setOrders: Dispatch<SetStateAction<IOrder[]>>,
-                                  setCountProducts: Dispatch<SetStateAction<number>>) {
+export async function fetchOrders(statusId: number, page: number, pageSize: number,
+                                  setOrders: (orders: IOrder[]) => void,
+                                  setCountProducts: (n: number) => void) {
     await axios
         .get<IOrderList>(host + '/orders',{
         params:{
+                'order_status': statusId,
                 'page': page,
                 'page_size': pageSize
         }})
@@ -47,7 +48,7 @@ export async function fetchOrders(page: number, pageSize: number,
         }).catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
 
-export async function fetchProductId(productName: string | undefined, setProductId: Dispatch<SetStateAction<number | undefined>>) {
+export async function fetchProductId(productName: string | undefined, setProductId: (n: number) => void) {
     await axios
         .get<number>(host + '/products?name=' + productName, {
             headers: {
@@ -59,20 +60,8 @@ export async function fetchProductId(productName: string | undefined, setProduct
         }).catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
 
-export async function fetchCategoryByName(name: string, setCategory: Dispatch<SetStateAction<ICategory | undefined>>) {
-    await axios
-        .get<ICategory>(host + '/categories?name=' + name, {
-            headers: {
-                'produce-view' : 'CATEGORY_BY_NAME'
-            }
-        })
-        .then((response) => {
-            setCategory(response.data)
-        }).catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
-}
-
 export async function removeFromOrder(productId: number, order: IOrder,
-                                      setOrder: Dispatch<SetStateAction<IOrder | undefined>>) {
+                                      setOrder: (order: IOrder) => void) {
     await axios
         .delete<IOrder>(host + '/orders/' + order?.id + '/products/' + productId)
         .then((response) => setOrder(response.data))
@@ -94,7 +83,7 @@ export async function deleteCategory(categoryId: number) {
 }
 
 export async function submitOrder(id: number | undefined, address: string, userId: number | undefined,
-                                  setOrder: Dispatch<SetStateAction<IOrder | undefined>>) {
+                                  setOrder: (order: undefined) => void) {
     const data = {
         id: id,
         address: address
@@ -161,9 +150,9 @@ export async function makePrimary(productId: number, imageId: number | undefined
 
 export async function fetchProductList(id: string | undefined, page: number, pageSize: number,
                                        orderBy: string, orderByType: string,
-                                       setProducts: Dispatch<SetStateAction<IProduct[]>>,
-                                       setCountProducts: Dispatch<SetStateAction<number>>,
-                                       setCategoryName: Dispatch<SetStateAction<string | undefined>>) {
+                                       setProducts: (p: IProduct[]) => void,
+                                       setCountProducts: (n: number) => void,
+                                       setCategoryName: (s: string) => void) {
     await axios
         .get<IProductList>(host + '/categories/'+id+'/products', {
             params:{
@@ -179,15 +168,14 @@ export async function fetchProductList(id: string | undefined, page: number, pag
         }).catch((er: AxiosError<IError>) => alert(er.response?.data.error))
 }
 
-export async function fetchProductDetails(id: string | undefined,
-                                          setProduct: Dispatch<SetStateAction<IProductDetails | undefined>>) {
+export async function fetchProductDetails(id: string | undefined, setProduct: (p: IProductDetails) => void) {
     await axios
         .get<IProductDetails>(host + '/products/' + id)
         .then((response)=>setProduct(response.data))
         .catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
 
-export async function fetchComments(id: string | undefined, setComments: Dispatch<SetStateAction<IComment[]>>) {
+export async function fetchComments(id: string | undefined, setComments: (c: IComment[]) => void) {
     await axios
         .get<IComment[]>(host + '/products/' + id + '/comments')
         .then((response)=> {setComments(response.data)})
@@ -235,8 +223,7 @@ export async function login(email: string, password: string, setUser: (user: IUs
         }).catch((er: AxiosError<IError>) => alert(er.response?.data.error))
 }
 
-export async function fetchCategories(id: string | undefined,
-                                      setCategories: Dispatch<SetStateAction<ICategory[]>>) {
+export async function fetchCategories(id: string | undefined, setCategories: (c: ICategory[]) => void) {
     await axios
         .get<ICategory[]>(host + '/categories', {
             params:{
@@ -247,7 +234,7 @@ export async function fetchCategories(id: string | undefined,
         .catch((er: AxiosError<IError>) => alert(er.response?.data.error))
 }
 
-export async function fetchAllCategories(setCategories: Dispatch<SetStateAction<ICategory[]>>) {
+export async function fetchAllCategories(setCategories: (c: ICategory[]) => void) {
     await axios
         .get<ICategory[]>(host + '/categories', {
             params:{
@@ -258,8 +245,7 @@ export async function fetchAllCategories(setCategories: Dispatch<SetStateAction<
         .catch((er: AxiosError<IError>) => alert(er.response?.data.error))
 }
 
-export async function fetchCategory(id: string | undefined,
-                                      setCategory: Dispatch<SetStateAction<ICategory | undefined>>) {
+export async function fetchCategory(id: string | undefined, setCategory: (c: ICategory) => void) {
     if (id === undefined) return
     await axios
         .get<ICategory>(host + '/categories/' + id)
@@ -267,14 +253,14 @@ export async function fetchCategory(id: string | undefined,
         .catch((er: AxiosError<IError>) => alert(er.response?.data.error))
 }
 
-export async function fetchProducts(setProducts: Dispatch<SetStateAction<IProduct[]>>) {
+export async function fetchProducts(setProducts: (p: IProduct[]) => void) {
         await axios
             .get<IProduct[]>(host + '/products')
             .then((response) => setProducts(response.data))
             .catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
 
-export async function fetchProductsCommentSummary (productId: string | undefined, setCommentSummary: Dispatch<SetStateAction<ICommentSummary>>) {
+export async function fetchProductsCommentSummary (productId: string | undefined, setCommentSummary: (c: ICommentSummary) => void) {
     await axios.get<ICommentSummary>(host + '/products/'+ productId +'/comments', {
         headers: {
             'produce-view' : 'COMMENTS_SUMMARY'

@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {IOrder} from "../utils/types";
-import {orderStatuses, pageSize} from "../utils/constants";
+import {orderStatuses} from "../utils/constants";
 import {fetchOrders, updateOrderStatus} from "../utils/api";
 import Pagination from "./ui/Pagination";
 
@@ -8,8 +8,9 @@ const OrdersList = () => {
 
     const [orders, setOrders] = useState<IOrder[]>([])
     const [page, setPage] = useState<number>(0)
+    const [filterStatusId, setFilterStatusId] = useState<number>(0)
     const [countOrders, setCountOrders] = useState<number>(0)
-
+    const pageSize = 6
 
     function canIncrementPage(): boolean {
         return countOrders>pageSize*(page+1)
@@ -17,17 +18,35 @@ const OrdersList = () => {
 
     useEffect(()=> {
         reload()
-    },[page])
+    },[page, filterStatusId])
 
     function reload() {
-        fetchOrders(page, pageSize, setOrders, setCountOrders).then(r => console.log(orders))
+        fetchOrders(filterStatusId, page, pageSize, setOrders, setCountOrders).then(r => console.log(orders))
     }
 
     return (
         <div>
             <div>
-                <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
+                <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 overflow-x-auto">
                     <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
+                        <div
+                            style={{float: "right", marginBottom: "10px"}}>
+                            <select
+                                defaultValue={0}
+                                className="w-40 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                onChange={(e) => {
+                                    setPage(0)
+                                    setFilterStatusId(parseInt(e.target.value))
+                                }}>
+                                <option value={0}>Выберите статус</option>
+                                {orderStatuses.map((status) => (
+                                    <option
+                                        key={status.id}
+                                        value={status.id}>
+                                        {status.name}
+                                    </option>))}
+                            </select>
+                        </div>
                         <table className="min-w-full leading-normal">
                             <thead>
                             <tr>
@@ -76,10 +95,11 @@ const OrdersList = () => {
                                         </td>
                                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                             <select
-                                                    defaultValue={orderStatuses.find(s=>order.statusId === s.id)?.id}
-                                                    className="form-control"
+                                                    disabled={order.statusId === 3 || order.statusId === 4}
+                                                    value={order.statusId}
+                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     onChange={(e) => {
-                                                        updateOrderStatus(order.id, parseInt(e.target.value))//.then(r => reload())
+                                                        updateOrderStatus(order.id, parseInt(e.target.value)).then(r => reload())
                                             }}>
                                                 <option disabled={true} value={0}>Выберите статус</option>
                                                 {orderStatuses.map((status) => (
