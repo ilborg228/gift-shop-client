@@ -18,7 +18,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
     const {id} = useParams()
     const [product, setProduct] = useState<IProductDetails>()
     const [comments, setComments] = useState<IComment[]>([])
-    const [commentSummary, setCommentSummary] = useState<ICommentSummary>({averageScore: 4, count: 117})
+    const [commentSummary, setCommentSummary] = useState<ICommentSummary>({averageScore: 0, count: 0})
     const {user} = useContext(AuthContext)
     const navigate = useNavigate()
 
@@ -26,13 +26,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
         fetchProductDetails(id, setProduct)
     },[])
     useEffect(()=> {
-        fetchComments(id, setComments)
+        reloadComments()
     },[])
     useEffect(()=> {
         fetchProductsCommentSummary(id, setCommentSummary)
     },[comments])
 
-    async function submitComment(text: string, scoreValue: string) {
+    async function submitComment(text: string, scoreValue: string) { //TODO move to api.ts
         await axios
             .post(host + "/comments", {
                     text: text,
@@ -44,6 +44,10 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
 
     function classNames(...classes: string[]) {
         return classes.filter(Boolean).join(' ')
+    }
+
+    function reloadComments() {
+        fetchComments(id, setComments)
     }
 
     function genImgBlock(imageUrl: string | undefined) {
@@ -123,7 +127,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
                 <CommentForm onCreate={submitComment}/>
 
                 {comments.length > 0 ? comments.map((comment) => (
-                    <Comment comment={comment}/>
+                    <Comment comment={comment} reload={reloadComments}/>
                 )) : <p className="my-5 text-gray-500">На данный момент комментариев нет. Вы можете быть первым!</p>}
 
             </div>

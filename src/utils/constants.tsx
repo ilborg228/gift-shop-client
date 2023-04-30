@@ -1,7 +1,8 @@
 import {IPath} from "./types";
 
-export const host: string = "http://localhost:8080"
-export const auth_host: string = "http://localhost:9000"
+const domain: string = "http://192.168.0.107"
+export const host: string = domain + ":8080"
+export const auth_host: string = domain + ":9000"
 
 export const ROLE_ADMIN = 'ADMIN'
 

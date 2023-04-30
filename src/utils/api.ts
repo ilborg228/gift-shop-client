@@ -75,6 +75,13 @@ export async function deleteProduct(productId: number) {
         .catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
 
+export async function deleteComment(commentId: number) {
+    await axios
+        .delete(host + '/comments/' + commentId)
+        .then(() => alert('Комментарий успешно удален'))
+        .catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
+}
+
 export async function deleteCategory(categoryId: number) {
     await axios
         .delete(host + '/categories/' + categoryId)
