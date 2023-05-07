@@ -5,6 +5,7 @@ export const host: string = domain + ":8080"
 export const auth_host: string = domain + ":9000"
 
 export const ROLE_ADMIN = 'ADMIN'
+export const ROLE_GUEST = 'GUEST'
 
 export const navigation: IPath[] = [
     { name: 'Каталог', href: '/store'},
@@ -24,21 +25,21 @@ export const orderStatuses = [
 
 export const slides = [
     {
-        url: 'http://localhost:8080/images/1.jpg',
+        url: 'http://192.168.0.107:8080/images/1.jpg',
     },
     {
-        url: 'http://localhost:8080/images/2.jpg',
+        url: 'http://192.168.0.107:8080/images/2.jpg',
     },
     {
-        url: 'http://localhost:8080/images/3.jpg',
+        url: 'http://192.168.0.107:8080/images/3.jpg',
     },
     {
-        url: 'http://localhost:8080/images/4.jpg',
+        url: 'http://192.168.0.107:8080/images/4.jpg',
     },
     {
-        url: 'http://localhost:8080/images/5.jpg',
+        url: 'http://192.168.0.107:8080/images/5.jpg',
     },
     {
-        url: 'http://localhost:8080/images/6.jpg',
+        url: 'http://192.168.0.107:8080/images/6.jpg',
     }
 ];

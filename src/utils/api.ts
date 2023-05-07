@@ -11,7 +11,6 @@ import {
     IUser
 } from './types'
 import {auth_host, host} from './constants'
-import {Dispatch, SetStateAction} from 'react'
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies()
@@ -22,6 +21,13 @@ export async function fetchOrder(userId: number | undefined, setOrder: (order: I
         .then((response) => {
             setOrder(response.data)
         })//.catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
+}
+
+export async function healthCheck(setServerHealth: (h: boolean) => void) {
+    await axios
+        .get<IOrder>(host + '/')
+        .then(() => {setServerHealth(true)})
+        .catch(()=>setServerHealth(false))
 }
 
 export async function updateOrderStatus(orderId: number, statusId: number) {
@@ -42,6 +48,23 @@ export async function fetchOrders(statusId: number, page: number, pageSize: numb
                 'page': page,
                 'page_size': pageSize
         }})
+        .then((response) => {
+            setOrders(response.data.orders)
+            setCountProducts(response.data.count)
+        }).catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
+}
+
+export async function fetchOrdersForUser(userId: number, statusId: number, page: number, pageSize: number,
+                                  setOrders: (orders: IOrder[]) => void,
+                                  setCountProducts: (n: number) => void) {
+    await axios
+        .get<IOrderList>(host + '/orders',{
+            params:{
+                'user_id': userId,
+                'order_status': statusId,
+                'page': page,
+                'page_size': pageSize
+            }})
         .then((response) => {
             setOrders(response.data.orders)
             setCountProducts(response.data.count)
@@ -152,6 +175,13 @@ export async function makePrimary(productId: number, imageId: number | undefined
     await axios
         .patch(host + '/products/' + productId + '/images/' + imageId)
         .then()
+        .catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
+}
+
+export async function updateUserName(userId: number, name: string) {
+    await axios
+        .patch(auth_host + '/users/' + userId + '?name=' + name)
+        .then(() => alert('Имя пользователя обновленно'))
         .catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
 

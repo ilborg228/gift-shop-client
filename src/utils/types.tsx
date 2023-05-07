@@ -66,6 +66,7 @@ export interface IOrder {
 
 export interface IUser {
     id: number | undefined,
+    username: string | undefined
     role: string | undefined
 }
 

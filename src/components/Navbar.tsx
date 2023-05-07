@@ -1,6 +1,6 @@
 import { Disclosure } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
-import {navigation, ROLE_ADMIN} from "../utils/constants";
+import {navigation, ROLE_ADMIN, ROLE_GUEST} from "../utils/constants";
 import {Link} from "react-router-dom";
 import {useContext, useState} from "react";
 import {AuthContext, AuthFlag} from "../context";
@@ -19,19 +19,35 @@ const Navbar = () => {
     }
 
     function showAdminButton() {
-        if (user !== undefined && user.role === ROLE_ADMIN)
-            return(
-                <Link
-                    key={'Панель администратора'}
-                    to={'/admin'}
-                    className={classNames(
-                        'text-gray-300 hover:bg-gray-700 hover:text-white',
-                        'px-3 py-2 rounded-md text-sm font-medium'
-                    )}
-                >
-                    {'Панель администратора'}
-                </Link>
-            )
+        if (user !== undefined) {
+            console.log(user)
+            if (user.role === ROLE_ADMIN)
+                return (
+                    <Link
+                        key={'Панель администратора'}
+                        to={'/admin'}
+                        className={classNames(
+                            'text-gray-300 hover:bg-gray-700 hover:text-white',
+                            'px-3 py-2 rounded-md text-sm font-medium'
+                        )}
+                    >
+                        {'Панель администратора'}
+                    </Link>
+                )
+            else if (user.role === ROLE_GUEST)
+                return (
+                    <Link
+                        key={'Личный кабинет'}
+                        to={'/lk'}
+                        className={classNames(
+                            'text-gray-300 hover:bg-gray-700 hover:text-white',
+                            'px-3 py-2 rounded-md text-sm font-medium'
+                        )}
+                    >
+                        {'Личный кабинет'}
+                    </Link>
+                )
+        }
     }
 
     function genLoginButton() {
@@ -77,6 +93,7 @@ const Navbar = () => {
                             cookies.set("user", null, { path: '/' })
                             const defUser: IUser = {
                                 id: 0,
+                                username: '',
                                 role: ''
                             }
                             setUser(defUser)

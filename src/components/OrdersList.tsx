@@ -1,10 +1,14 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {IOrder} from "../utils/types";
 import {orderStatuses} from "../utils/constants";
-import {fetchOrders, updateOrderStatus} from "../utils/api";
+import {fetchOrders, fetchOrdersForUser, updateOrderStatus} from "../utils/api";
 import Pagination from "./ui/Pagination";
 
-const OrdersList = () => {
+interface OrdersListProps {
+    userId?: number
+}
+
+const OrdersList: React.FC<OrdersListProps> = ({userId}) => {
 
     const [orders, setOrders] = useState<IOrder[]>([])
     const [page, setPage] = useState<number>(0)
@@ -21,7 +25,10 @@ const OrdersList = () => {
     },[page, filterStatusId])
 
     function reload() {
-        fetchOrders(filterStatusId, page, pageSize, setOrders, setCountOrders).then(r => console.log(orders))
+        if (userId)
+            fetchOrdersForUser(userId, filterStatusId, page, pageSize, setOrders, setCountOrders).then(r => console.log(orders))
+        else
+            fetchOrders(filterStatusId, page, pageSize, setOrders, setCountOrders).then(r => console.log(orders))
     }
 
     return (
@@ -94,13 +101,13 @@ const OrdersList = () => {
                                                 )}
                                         </td>
                                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <select
-                                                    disabled={order.statusId === 3 || order.statusId === 4}
-                                                    value={order.statusId}
-                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                    onChange={(e) => {
-                                                        updateOrderStatus(order.id, parseInt(e.target.value)).then(r => reload())
-                                            }}>
+                                            {userId === undefined ? <select
+                                                disabled={order.statusId === 3 || order.statusId === 4}
+                                                value={order.statusId}
+                                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                onChange={(e) => {
+                                                    updateOrderStatus(order.id, parseInt(e.target.value)).then(r => reload())
+                                                }}>
                                                 <option disabled={true} value={0}>Выберите статус</option>
                                                 {orderStatuses.map((status) => (
                                                     <option
@@ -108,7 +115,12 @@ const OrdersList = () => {
                                                         value={status.id}>
                                                         {status.name}
                                                     </option>))}
-                                            </select>
+                                            </select>:
+
+                                                <p className="text-gray-900 whitespace-no-wrap">
+                                                    {orderStatuses.find(os => os.id === order.statusId)?.name}
+                                                </p>
+                                            }
                                         </td>
                                     </tr>
                                 )}
