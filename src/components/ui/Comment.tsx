@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {IComment} from "../../utils/types";
 import {StarIcon} from "@heroicons/react/solid";
 import {ROLE_ADMIN} from "../../utils/constants";
-import {deleteProduct} from "../../utils/api";
+import {deleteComment, deleteProduct} from "../../utils/api";
 import {AuthContext} from "../../context";
 
 interface CommentProps {
@@ -24,8 +24,8 @@ const Comment: React.FC<CommentProps> = ({comment, reload}) => {
                 <button
                     disabled={false}
                     onClick={() => {
-                        if (window.confirm('Вы уверены что хотите удалить товар?')) {
-                            deleteProduct(comment.id).then(() => reload())
+                        if (window.confirm('Вы уверены что хотите удалить комментарий?')) {
+                            deleteComment(comment.id).then(() => reload())
                         }
                     }}
                     type="submit"

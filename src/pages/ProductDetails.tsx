@@ -1,13 +1,14 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {IComment, ICommentSummary, IError, IProductDetails} from "../utils/types";
 import axios, {AxiosError} from "axios";
-import {host} from "../utils/constants";
+import {host, ROLE_ADMIN} from "../utils/constants";
 import {useNavigate, useParams} from "react-router-dom";
 import {StarIcon} from "@heroicons/react/solid";
 import Comment from "../components/ui/Comment";
 import CommentForm from "../components/CommentForm";
 import {AuthContext} from "../context";
-import {addToCart, fetchComments, fetchProductDetails, fetchProductsCommentSummary} from "../utils/api";
+import {addToCart, fetchComments, fetchProductDetails, fetchProductsCommentSummary, updateInStock} from "../utils/api";
+import Toggle from "../components/ui/Toggle";
 
 interface ProductDetailsProps {
 
@@ -17,6 +18,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
 
     const {id} = useParams()
     const [product, setProduct] = useState<IProductDetails>()
+    const [inStock, setInStock] = useState<boolean>(false)
     const [comments, setComments] = useState<IComment[]>([])
     const [commentSummary, setCommentSummary] = useState<ICommentSummary>({averageScore: 0, count: 0})
     const {user} = useContext(AuthContext)
@@ -24,10 +26,12 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
 
     useEffect(()=> {
         fetchProductDetails(id, setProduct)
-    },[])
-    useEffect(()=> {
         reloadComments()
     },[])
+    useEffect(()=> {
+        if (product?.inStock !== undefined)
+            setInStock(product?.inStock)
+    },[product])
     useEffect(()=> {
         fetchProductsCommentSummary(id, setCommentSummary)
     },[comments])
@@ -48,6 +52,26 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
 
     function reloadComments() {
         fetchComments(id, setComments)
+    }
+
+    function onStockUpdate(inStock: boolean) {
+        updateInStock(product?.id, inStock)
+    }
+
+    function showAdminButtons() {
+        if (user !== undefined) {
+            if (user.role === ROLE_ADMIN && inStock !== undefined) {
+                return (
+                    <Toggle onCheck={onStockUpdate} enabled={inStock} setEnabled={setInStock} label={'Наличие'}/>
+                )
+            }
+            else {
+                if (inStock) {
+                    return (<h1 className="text-l text-green-700">В наличии</h1>)
+                } else
+                    return (<h1 className="text-l text-red-700">Нет в наличии</h1>)
+            }
+        }
     }
 
     function genImgBlock(imageUrl: string | undefined) {
@@ -103,6 +127,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
                         </p>
                     </div>
                 </div>
+                <div className="m-5">{showAdminButtons()}</div>
                 <hr className="m-5"/>
 
                 <h1 className="text-3xl text-gray-700">Описание</h1>

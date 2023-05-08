@@ -29,7 +29,7 @@ export interface IOrderList {
 }
 
 export interface IProductDetails extends IProduct{
-    height: number
+    inStock: boolean
     description: string
     images: string[]
 }

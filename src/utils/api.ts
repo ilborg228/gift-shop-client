@@ -112,6 +112,20 @@ export async function deleteCategory(categoryId: number) {
         .catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
 
+export async function updateInStock(id: number | undefined,
+                                  inStock: boolean | undefined) {
+    const data = {
+        id: id,
+        inStock: inStock
+    }
+
+    await axios
+        .patch(host + '/products', data)
+        .then(()=> {
+            alert('Товар успешно обновлен')
+        }).catch((er: AxiosError<IError>) => alert(er.response?.data.error))
+}
+
 export async function submitOrder(id: number | undefined, address: string, userId: number | undefined,
                                   setOrder: (order: undefined) => void) {
     const data = {
