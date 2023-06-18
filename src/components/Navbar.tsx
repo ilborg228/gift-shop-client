@@ -51,7 +51,7 @@ const Navbar = () => {
     }
 
     function genLoginButton() {
-        if (user === undefined || user.id === undefined || user.id === 0)
+        if (user === undefined || user.id === undefined || user.id === '0')
             return (
                 <div>
                     <Link
@@ -92,7 +92,7 @@ const Navbar = () => {
                         onClick={() => {
                             cookies.set("user", null, { path: '/' })
                             const defUser: IUser = {
-                                id: 0,
+                                id: '0',
                                 username: '',
                                 role: ''
                             }

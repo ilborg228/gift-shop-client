@@ -16,7 +16,7 @@ const LkPage = () => {
 
     useEffect(()=>{
         console.log(user)
-        if (user === undefined || user.id === undefined || user.id === 0 || user.role !== ROLE_GUEST)
+        if (user === undefined || user.id === undefined || user.id === '0' || user.role !== ROLE_GUEST)
             navigate('/', {replace:true})
     },[user])
 

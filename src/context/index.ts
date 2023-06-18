@@ -7,7 +7,7 @@ export type AuthFlag = {
 }
 
 const defUser: IUser = {
-    id: 0,
+    id: '0',
     username: '',
     role: ''
 }

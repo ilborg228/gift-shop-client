@@ -15,7 +15,7 @@ import Cookies from 'universal-cookie';
 
 const cookies = new Cookies()
 
-export async function fetchOrder(userId: number | undefined, setOrder: (order: IOrder) => void) {
+export async function fetchOrder(userId: string | undefined, setOrder: (order: IOrder) => void) {
     await axios
         .get<IOrder>(host + '/orders/' + userId)
         .then((response) => {
@@ -54,7 +54,7 @@ export async function fetchOrders(statusId: number, page: number, pageSize: numb
         }).catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
 
-export async function fetchOrdersForUser(userId: number, statusId: number, page: number, pageSize: number,
+export async function fetchOrdersForUser(userId: string, statusId: number, page: number, pageSize: number,
                                   setOrders: (orders: IOrder[]) => void,
                                   setCountProducts: (n: number) => void) {
     await axios
@@ -126,7 +126,7 @@ export async function updateInStock(id: number | undefined,
         }).catch((er: AxiosError<IError>) => alert(er.response?.data.error))
 }
 
-export async function submitOrder(id: number | undefined, address: string, userId: number | undefined,
+export async function submitOrder(id: number | undefined, address: string, userId: string | undefined,
                                   setOrder: (order: undefined) => void) {
     const data = {
         id: id,
@@ -192,7 +192,7 @@ export async function makePrimary(productId: number, imageId: number | undefined
         .catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
 
-export async function updateUserName(userId: number, name: string) {
+export async function updateUserName(userId: string, name: string) {
     await axios
         .patch(auth_host + '/users/' + userId + '?name=' + name)
         .then(() => alert('Имя пользователя обновленно'))
@@ -233,7 +233,7 @@ export async function fetchComments(id: string | undefined, setComments: (c: ICo
         .catch((er: AxiosError<IError>)=>alert(er.response?.data.error))
 }
 
-export async function addToCart(userId: number | undefined, id: string | undefined) {
+export async function addToCart(userId: string | undefined, id: string | undefined) {
     const data = {
         userId: userId,
         products: [

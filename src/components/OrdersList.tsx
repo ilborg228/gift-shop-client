@@ -5,7 +5,7 @@ import {fetchOrders, fetchOrdersForUser, updateOrderStatus} from "../utils/api";
 import Pagination from "./ui/Pagination";
 
 interface OrdersListProps {
-    userId?: number
+    userId?: string
 }
 
 const OrdersList: React.FC<OrdersListProps> = ({userId}) => {

@@ -12,7 +12,7 @@ const RegistrationPage = () => {
     const [password, setPassword] = useState('')
 
     useEffect(()=>{
-        if (user === undefined || user.id === undefined || user.id === 0) {}
+        if (user === undefined || user.id === undefined || user.id === '0') {}
         else navigate(-1)
     },[])
 

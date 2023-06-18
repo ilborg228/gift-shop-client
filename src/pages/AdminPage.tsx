@@ -18,7 +18,7 @@ const AdminPage = () => {
 
     useEffect(()=>{
         console.log(user)
-        if (user === undefined || user.id === undefined || user.id === 0 || user.role !== ROLE_ADMIN)
+        if (user === undefined || user.id === undefined || user.id === '0' || user.role !== ROLE_ADMIN)
             navigate('/', {replace:true})
     },[user])
 

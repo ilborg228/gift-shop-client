@@ -65,13 +65,12 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
                     <Toggle onCheck={onStockUpdate} enabled={inStock} setEnabled={setInStock} label={'Наличие'}/>
                 )
             }
-            else {
-                if (inStock) {
-                    return (<h1 className="text-l text-green-700">В наличии</h1>)
-                } else
-                    return (<h1 className="text-l text-red-700">Нет в наличии</h1>)
-            }
         }
+
+        if (inStock)
+            return (<h1 className="text-l text-green-700">В наличии</h1>)
+        else
+            return (<h1 className="text-l text-red-700">Нет в наличии</h1>)
     }
 
     function genImgBlock(imageUrl: string | undefined) {
@@ -136,7 +135,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
                 <button
                     disabled={false}
                     onClick={() => {
-                        if (user && user.id && user.id > 0)
+                        if (user && user.id && user.id !== '0')
                             addToCart(user.id, id)
                         else
                             navigate('/login', {replace:true})
